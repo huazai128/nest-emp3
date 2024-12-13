@@ -74,16 +74,19 @@ export default defineConfig(store => {
         }),
       )
 
-      // chain.plugin('CopyWebpackPlugin').use(
-      //   new CopyWebpackPlugin({
-      //     patterns: [
-      //       {
-      //         from: resolve(__dirname, './public'),
-      //         to: resolve(__dirname, './dist/views'),
-      //       },
-      //     ],
-      //   }),
-      // )
+      // chain.plugin('CopyRspackPlugin').use(
+      //   require('@rspack/plugin-copy'), // 引入 CopyRspackPlugin
+      //   [
+      //     {
+      //       patterns: [
+      //         {
+      //           from: path.resolve(__dirname, './public'),
+      //           to: path.resolve(__dirname, './dist/views'),
+      //         },
+      //       ],
+      //     },
+      //   ]
+      // );
 
       chain.plugin('TypedCssModulesPlugin').use(
         new TypedCssModulesPlugin({
