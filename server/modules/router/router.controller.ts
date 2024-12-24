@@ -1,6 +1,6 @@
-import { Controller, Get, Render, Req, UseGuards, Header, Query } from '@nestjs/common'
-import { Request } from 'express'
-import { RouterSercive } from './router.service'
+import { Controller, Get, Render, Header, Query } from '@nestjs/common';
+import { Request } from 'express';
+import { RouterSercive } from './router.service';
 
 @Controller()
 export class RouterController {
@@ -15,7 +15,7 @@ export class RouterController {
   @Header('content-type', 'text/html')
   @Render('index')
   login(@Query() req: Request) {
-    return { data: { name: '登录页面' } }
+    return { data: { name: '登录页面' } };
   }
 
   /**
@@ -27,7 +27,6 @@ export class RouterController {
   @Header('content-type', 'text/html')
   @Render('error')
   getError() {
-    return { msg: '1212' }
+    return { msg: '1212' };
   }
-
 }

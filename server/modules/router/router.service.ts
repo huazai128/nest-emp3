@@ -1,5 +1,5 @@
-import { Injectable } from '@nestjs/common'
-import { Request } from 'express'
+import { Injectable } from '@nestjs/common';
+import { Request } from 'express';
 
 /**
  * 处理路由下各种数据
@@ -9,9 +9,8 @@ import { Request } from 'express'
 @Injectable()
 export class RouterSercive {
   public getCommonData(req: Request) {
-    
     return {
-      name:'w'
-    }
+      name: 'w',
+    };
   }
 }

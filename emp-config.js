@@ -1,13 +1,12 @@
-import {defineConfig} from '@empjs/cli'
-import ReactPlugin from '@empjs/plugin-react'
-import {pluginRspackEmpShare} from '@empjs/share'
-import { join, resolve } from 'path'
-const InlineCodePlugin = require('html-inline-code-plugin')
-const CopyWebpackPlugin = require('copy-webpack-plugin')
-const { TypedCssModulesPlugin } = require('typed-css-modules-webpack-plugin')
+import { defineConfig } from '@empjs/cli';
+import ReactPlugin from '@empjs/plugin-react';
+import { pluginRspackEmpShare } from '@empjs/share';
+import { join, resolve } from 'path';
+import InlineCodePlugin from 'html-inline-code-plugin';
+import { TypedCssModulesPlugin } from 'typed-css-modules-webpack-plugin';
 
-export default defineConfig(store => {
-  const env = process.env.EMP_ENV = store.env || 'dev'
+export default defineConfig((store) => {
+  const env = (process.env.EMP_ENV = store.env || 'dev');
   return {
     plugins: [
       ReactPlugin(),
@@ -51,7 +50,7 @@ export default defineConfig(store => {
     },
     chain(chain) {
       if (env !== 'dev' && !!env) {
-        chain.devtool('source-map')
+        chain.devtool('source-map');
         chain.plugin('SourcemapUploadPlugin').use(
           new UploadSourceMapPlugin({
             url: `http:localhost:5005/api/upload-zip`, // 上传url
@@ -63,8 +62,9 @@ export default defineConfig(store => {
               },
             },
           }),
-        )
+        );
       }
+
       chain.plugin('InlineCodePlugin').use(
         new InlineCodePlugin({
           begin: false,
@@ -72,28 +72,13 @@ export default defineConfig(store => {
           inject: 'body',
           code: `window.INIT_DATA = <%- JSON.stringify(data) %>`,
         }),
-      )
-
-      // chain.plugin('CopyRspackPlugin').use(
-      //   require('@rspack/plugin-copy'), // 引入 CopyRspackPlugin
-      //   [
-      //     {
-      //       patterns: [
-      //         {
-      //           from: path.resolve(__dirname, './public'),
-      //           to: path.resolve(__dirname, './dist/views'),
-      //         },
-      //       ],
-      //     },
-      //   ]
-      // );
+      );
 
       chain.plugin('TypedCssModulesPlugin').use(
         new TypedCssModulesPlugin({
           globPattern: 'src/!(styles)/**/*.scss',
         }),
-      )
-
+      );
     },
-  }
-})
+  };
+});
