@@ -21,6 +21,7 @@ export default defineConfig((store) => {
     ],
     server: {
       port: 8008,
+      open: false,
       devMiddleware: {
         index: true,
         mimeTypes: {
