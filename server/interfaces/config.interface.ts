@@ -5,10 +5,7 @@ export interface ConfigServer {
     host: string;
     port: number;
   };
-  redis: {
-    type: string;
-    url: string;
-  };
+  redis: RedisModuleOptions;
   wechat: {
     appId: string;
     appSecret: string;
