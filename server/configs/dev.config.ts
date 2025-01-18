@@ -1,4 +1,5 @@
 import { ConfigServer } from '@app/interfaces/config.interface';
+import { wechatConfig } from '../config';
 
 const config: ConfigServer = {
   redisConf: {
@@ -9,10 +10,7 @@ const config: ConfigServer = {
     type: 'single',
     url: 'redis://localhost:6379',
   },
-  wechat: {
-    appId: 'wxb768f91e8b44ebba',
-    appSecret: 'c542762463d14cd2144d2a3796becd4c',
-  },
+  wechat: wechatConfig,
 };
 
 export default config;

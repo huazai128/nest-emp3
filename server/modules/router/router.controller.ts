@@ -34,4 +34,25 @@ export class RouterController {
   getError() {
     return { msg: '1212' };
   }
+
+  /**
+   * 通用页面路由
+   * 渲染页面模板
+   * @param {Request} req - 请求对象
+   * @returns {Object} 返回渲染数据
+   */
+  @Get('*')
+  @Header('content-type', 'text/html')
+  @Render('index')
+  async common(@Query() req: Request) {
+    // 获取公共数据
+    const commonData = this.routeService.getCommonData(req);
+
+    return {
+      data: {
+        ...commonData,
+        path: req.url, // 当前访问路径
+      },
+    };
+  }
 }

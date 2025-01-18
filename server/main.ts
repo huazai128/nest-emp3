@@ -7,8 +7,8 @@ import { getServerIp } from './utils/util';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
-  app.useStaticAssets(join(__dirname, '../../dist/client'));
-  app.setBaseViewsDir(join(__dirname, '../../dist/client'));
+  app.useStaticAssets(join(__dirname, '../client'));
+  app.setBaseViewsDir(join(__dirname, '../client'));
 
   app.setViewEngine('html');
   app.engine('html', ejs.renderFile);

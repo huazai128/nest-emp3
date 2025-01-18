@@ -4,7 +4,7 @@
 /build
 
 # Logs
-
+/server/config.ts
 npm-debug.log*
 pnpm-debug.log*
 yarn-debug.log*

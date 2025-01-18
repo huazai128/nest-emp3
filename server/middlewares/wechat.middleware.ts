@@ -12,8 +12,11 @@ import { Request, Response, NextFunction } from 'express';
 export class WechatAuthMiddleware implements NestMiddleware {
   use(req: Request, res: Response, next: NextFunction) {
     // 判断是否来自微信
+    const isWechatBrowser = (userAgent: string): boolean => {
+      return /MicroMessenger/i.test(userAgent || '');
+    };
     const userAgent = req.headers['user-agent'] || '';
-    const isWechat = /MicroMessenger/i.test(userAgent);
+    const isWechat = isWechatBrowser(userAgent);
 
     if (!isWechat) {
       return res.status(403).json({
