@@ -8,6 +8,11 @@ import { Request } from 'express';
  */
 @Injectable()
 export class RouterSercive {
+  /**
+   * 获取公共数据
+   * @param {Request} req - 请求对象
+   * @returns {Object} 返回公共数据
+   */
   public getCommonData(req: Request) {
     return {
       name: 'w',

@@ -2,30 +2,35 @@ import { Controller, Get, Render, Header, Query } from '@nestjs/common';
 import { Request } from 'express';
 import { RouterSercive } from './router.service';
 
+/**
+ * 路由控制器
+ * 处理页面路由和渲染
+ */
 @Controller()
 export class RouterController {
   constructor(private readonly routeService: RouterSercive) {}
+
   /**
-   * 渲染页面
-   * @param {Request} req
-   * @return {*}
-   * @memberof AppController
+   * 登录页面路由
+   * 渲染登录页面模板
+   * @param {Request} req - 请求对象
+   * @returns {Object} 返回渲染数据
    */
   @Get('login')
-  @Header('content-type', 'text/html')
-  @Render('index')
+  @Header('content-type', 'text/html') // 设置响应头为HTML
+  @Render('index') // 使用index模板渲染
   login(@Query() req: Request) {
     return { data: { name: '登录页面' } };
   }
 
   /**
-   * 错误页面
-   * @return {*}
-   * @memberof AppController
+   * 错误页面路由
+   * 渲染错误页面模板
+   * @returns {Object} 返回渲染数据
    */
   @Get('error')
-  @Header('content-type', 'text/html')
-  @Render('error')
+  @Header('content-type', 'text/html') // 设置响应头为HTML
+  @Render('error') // 使用error模板渲染
   getError() {
     return { msg: '1212' };
   }
