@@ -19,6 +19,12 @@ export default defineConfig((store) => {
         },
       }),
     ],
+    base: '/',
+    resolve: {
+      alias: {
+        '@src': resolve(__dirname, './src'),
+      },
+    },
     server: {
       port: 8008,
       open: false,

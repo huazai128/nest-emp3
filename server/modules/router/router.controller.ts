@@ -1,4 +1,4 @@
-import { Controller, Get, Render, Header, Query } from '@nestjs/common';
+import { Controller, Get, Render, Header, Req } from '@nestjs/common';
 import { Request } from 'express';
 import { RouterSercive } from './router.service';
 import { createLogger } from '@app/utils/logger';
@@ -50,14 +50,18 @@ export class RouterController {
   @Get('*')
   @Header('content-type', 'text/html')
   @Render('index')
-  async common(@Query() req: Request) {
+  async common(@Req() req: Request) {
+    const accessUrl = req.protocol + '://' + req.get('host') + req.originalUrl;
+    logger.log('访问的连接:', accessUrl);
     // 获取公共数据
     const commonData = this.routeService.getCommonData(req);
-
+    const wechatLoginUrl =
+      await this.routeService.generateWechatLoginUrl(accessUrl);
     return {
       data: {
         ...commonData,
         path: req.url, // 当前访问路径
+        wechatLoginUrl,
       },
     };
   }

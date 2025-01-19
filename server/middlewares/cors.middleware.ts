@@ -93,7 +93,6 @@ export class CorsMiddleware implements NestMiddleware {
     },
   ) {
     const { origin, allowedMethods, allowedHeaders, getMethod } = config;
-    logger.log('origin=====', origin);
 
     // 设置允许的源
     if (!origin || CROSS_DOMAIN.allowedOrigins.includes(origin) || isDevEnv) {

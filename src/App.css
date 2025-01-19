@@ -24,3 +24,19 @@ body {
   font-weight: 400;
   opacity: 0.5;
 }
+
+.wx-login {
+  font-size: 14px;
+  color: green;
+  font-weight: bold;
+  cursor: pointer;
+  position: relative;
+  margin: 0 auto;
+}
+
+.loginBody {
+  width: 210px;
+  height: 210px;
+  overflow: hidden;
+  padding: 10px 48px 0;
+}

@@ -4,6 +4,7 @@ import { NestExpressApplication } from '@nestjs/platform-express';
 import { join } from 'path';
 import * as ejs from 'ejs';
 import { getServerIp } from './utils/util';
+import { APP } from './configs';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
@@ -17,7 +18,9 @@ async function bootstrap() {
   app.engine('html', ejs.renderFile);
 
   await app.listen(3003).then(() => {
-    console.info(`Application is running on: http://${getServerIp()}:${3003}`);
+    console.info(
+      `Application is running on: http://${getServerIp()}:${APP.PORT}`,
+    );
   });
 }
 bootstrap();

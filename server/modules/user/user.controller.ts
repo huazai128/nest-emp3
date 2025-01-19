@@ -5,12 +5,12 @@ import { UserService } from './user.service';
  * 用户控制器
  * 处理用户相关的请求
  */
-@Controller('user')
+@Controller('api/user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
   /**
-   * 创建用户
+   * 用户登录
    * @param userData - 用户数据
    * @returns 创建的用户信息
    */

@@ -3445,6 +3445,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/lodash@npm:^4.17.14":
+  version: 4.17.14
+  resolution: "@types/lodash@npm:4.17.14"
+  checksum: 10c0/343c6f722e0b39969036a885ad5aad6578479ead83987128c9b994e6b7f2fb9808244d802d4d332396bb09096f720a6c7060de16a492f5460e06a44560360322
+  languageName: node
+  linkType: hard
+
 "@types/methods@npm:^1.1.4":
   version: 1.1.4
   resolution: "@types/methods@npm:1.1.4"
@@ -9389,6 +9396,7 @@ __metadata:
     "@types/express": "npm:^5.0.0"
     "@types/express-session": "npm:^1"
     "@types/jest": "npm:^29.5.2"
+    "@types/lodash": "npm:^4.17.14"
     "@types/node": "npm:^20.3.1"
     "@types/react": "npm:^18.2.30"
     "@types/react-dom": "npm:^18.2.14"
@@ -9419,6 +9427,7 @@ __metadata:
     tsconfig-paths: "npm:^4.2.0"
     typed-css-modules-webpack-plugin: "npm:^0.2.0"
     typescript: "npm:^5.1.3"
+    zustand: "npm:^5.0.3"
   languageName: unknown
   linkType: soft
 
@@ -12964,5 +12973,26 @@ __metadata:
   version: 0.1.0
   resolution: "yocto-queue@npm:0.1.0"
   checksum: 10c0/dceb44c28578b31641e13695d200d34ec4ab3966a5729814d5445b194933c096b7ced71494ce53a0e8820685d1d010df8b2422e5bf2cdea7e469d97ffbea306f
+  languageName: node
+  linkType: hard
+
+"zustand@npm:^5.0.3":
+  version: 5.0.3
+  resolution: "zustand@npm:5.0.3"
+  peerDependencies:
+    "@types/react": ">=18.0.0"
+    immer: ">=9.0.6"
+    react: ">=18.0.0"
+    use-sync-external-store: ">=1.2.0"
+  peerDependenciesMeta:
+    "@types/react":
+      optional: true
+    immer:
+      optional: true
+    react:
+      optional: true
+    use-sync-external-store:
+      optional: true
+  checksum: 10c0/dad96c6c123fda088c583d5df6692e9245cd207583078dc15f93d255a67b0f346bad4535545c98852ecde93d254812a0c799579dfde2ab595016b99fbe20e4d5
   languageName: node
   linkType: hard

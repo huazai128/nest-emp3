@@ -1,15 +1,11 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="<%= htmlWebpackPlugin.options.lang %>">
+  <head>
+    <title><%= htmlWebpackPlugin.options.title %></title>
+  </head>
 
-<head>
-  <title>
-    <%= htmlWebpackPlugin.options.title %>
-  </title>
-
-</head>
-
-<body>
-  <div id="emp-root"></div>
-</body>
-
+  <body>
+    <div id="emp-root"></div>
+    <script src="https://res.wx.qq.com/connect/zh_CN/htmledition/js/wxLogin.js"></script>
+  </body>
 </html>

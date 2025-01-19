@@ -2,7 +2,15 @@
   "extends": "@empjs/cli/emp-tsconfig.json",
   "compilerOptions": {
     "baseUrl": "./",
+    "paths": {
+      "@src/*": ["./src/*"]
+    },
+    "experimentalDecorators": true,
+    "useDefineForClassFields": true,
+    "allowSyntheticDefaultImports": true,
+    "emitDecoratorMetadata": true,
+    "typeRoots": ["./node_modules/@types", "./typings"]
   },
-  "include": ["src"],
+  "include": ["src", "typings"],
   "exclude": ["node_modules", "test", "dist", "server", "**/*spec.ts"]
 }
