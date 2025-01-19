@@ -45,8 +45,8 @@ export default defineConfig((store) => {
       },
     },
     html: {
-      template: resolve('./views/index.html'),
-      filename: resolve('./dist/views/index.html'),
+      template: resolve(__dirname, './views/index.html'),
+      filename: resolve(__dirname, './dist/views/index.html'), // 修改输出路径配置,将HTML文件输出到views目录
       title: '基础架构框架',
     },
     chain(chain) {

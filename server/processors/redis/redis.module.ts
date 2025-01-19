@@ -45,12 +45,6 @@ export class RedisCoreModule {
       useValue: createRedisConnection(options),
     };
 
-    // 记录初始化信息
-    logger.info('RedisCoreModule forRoot', {
-      redisOptionsProvider,
-      redisConnectionProvider,
-    });
-
     return {
       module: RedisCoreModule,
       providers: [redisOptionsProvider, redisConnectionProvider],

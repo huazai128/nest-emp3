@@ -1,7 +1,12 @@
 import { Controller, Get, Render, Header, Query } from '@nestjs/common';
 import { Request } from 'express';
 import { RouterSercive } from './router.service';
+import { createLogger } from '@app/utils/logger';
 
+const logger = createLogger({
+  scope: 'RouterController',
+  time: true,
+});
 /**
  * 路由控制器
  * 处理页面路由和渲染
@@ -19,7 +24,8 @@ export class RouterController {
   @Get('login')
   @Header('content-type', 'text/html') // 设置响应头为HTML
   @Render('index') // 使用index模板渲染
-  login(@Query() req: Request) {
+  login() {
+    logger.info('login');
     return { data: { name: '登录页面' } };
   }
 

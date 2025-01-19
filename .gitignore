@@ -4,6 +4,7 @@
 /build
 
 # Logs
+/.yarn/install-state.gz
 /server/config.ts
 npm-debug.log*
 pnpm-debug.log*
