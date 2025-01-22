@@ -1,5 +1,15 @@
 import { Injectable } from '@nestjs/common';
+import { User } from './user.model';
+import { Model } from 'mongoose';
+import { InjectModel } from '@app/transformers/model.transform';
+import { createLogger } from '@app/utils/logger';
+import { AUTH } from '@app/configs';
+import { JwtService } from '@nestjs/jwt';
 
+const logger = createLogger({
+  scope: 'UserService',
+  time: true,
+});
 /**
  * 用户服务
  * 该服务负责处理用户相关的业务逻辑
@@ -8,35 +18,73 @@ import { Injectable } from '@nestjs/common';
 export class UserService {
   // 这里可以添加用户服务的相关方法
   // 例如: 创建用户、获取用户信息、更新用户信息等
+  constructor(
+    @InjectModel(User) private authModel: Model<User>,
+    private readonly jwtService: JwtService,
+  ) {}
 
   /**
-   * 创建用户
+   * 用户登录微信
    * @param userData - 用户数据
-   * @returns 创建的用户信息
+   * @returns 用户信息
    */
-  createUser(userData: any): any {
-    // 实现创建用户的逻辑
-    return { id: 1, ...userData };
+  public async loginWx(userData: any): Promise<any> {
+    // 根据用户的openId查找现有用户
+    let existingUser = await this.authModel.findOne({
+      openId: userData.openId,
+    });
+
+    // 如果没有找到现有用户，则创建一个新用户
+    if (!existingUser) {
+      existingUser = await this.authModel.create(userData);
+    }
+    // 如果用户创建失败，则抛出错误
+    if (!existingUser) {
+      throw new Error('用户创建失败');
+    }
+    // 根据用户userId、openId、nickname生成token
+    const token = this.generateToken(
+      existingUser.userId.toString() || '',
+      existingUser.openid || '',
+      existingUser.nickname || '',
+    );
+    return { user: existingUser, token };
+  }
+  /**
+   * 生成token
+   * @param userId - 用户ID
+   * @param openId - 用户openId
+   * @param nickname - 用户昵称
+   * @returns token
+   */
+  private generateToken(
+    userId: string,
+    openId: string,
+    nickname: string,
+  ): { accessToken: string; expiresIn: number } {
+    const token = {
+      accessToken: this.jwtService.sign({ userId, openId, nickname }),
+      expiresIn: AUTH.expiresIn as number,
+    };
+    return token;
   }
 
   /**
-   * 获取用户信息
+   * 验证用户
+   * @param {ValidateUserRequest} { userId }
+   * @return {*}
+   * @memberof AuthService
+   */
+  public async validateUser(userId: number) {
+    return await this.getFindUserId(userId);
+  }
+
+  /**
+   * 根据用户ID查找用户
    * @param userId - 用户ID
    * @returns 用户信息
    */
-  getUser(userId: number): any {
-    // 实现获取用户信息的逻辑
-    return { id: userId, name: '用户名称' };
-  }
-
-  /**
-   * 更新用户信息
-   * @param userId - 用户ID
-   * @param userData - 用户数据
-   * @returns 更新后的用户信息
-   */
-  updateUser(userId: number, userData: any): any {
-    // 实现更新用户信息的逻辑
-    return { id: userId, ...userData };
+  public async getFindUserId(userId: number) {
+    return this.authModel.findOne({ userId }).exec();
   }
 }

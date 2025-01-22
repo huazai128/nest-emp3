@@ -16,7 +16,7 @@ export class UserController {
    */
   @Post('create')
   createUser(@Body() userData: any) {
-    return this.userService.createUser(userData);
+    // return this.userService.createUser(userData);
   }
 
   /**
@@ -26,7 +26,7 @@ export class UserController {
    */
   @Get(':id')
   getUser(@Param('id') userId: number) {
-    return this.userService.getUser(userId);
+    // return this.userService.getUser(userId);
   }
 
   /**
@@ -37,6 +37,6 @@ export class UserController {
    */
   @Post('update/:id')
   updateUser(@Param('id') userId: number, @Body() userData: any) {
-    return this.userService.updateUser(userId, userData);
+    // return this.userService.updateUser(userId, userData);
   }
 }

@@ -1,7 +1,15 @@
-import { Controller, Get, Render, Header, Req } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Render,
+  Header,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
 import { Request } from 'express';
 import { RouterSercive } from './router.service';
 import { createLogger } from '@app/utils/logger';
+import { RouterGuard } from '@app/guards/router.guard';
 
 const logger = createLogger({
   scope: 'RouterController',
@@ -47,6 +55,7 @@ export class RouterController {
    * @param {Request} req - 请求对象
    * @returns {Object} 返回渲染数据
    */
+  @UseGuards(RouterGuard) // 使用路由守卫
   @Get('*')
   @Header('content-type', 'text/html')
   @Render('index')

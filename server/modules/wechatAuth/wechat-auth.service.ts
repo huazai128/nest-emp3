@@ -107,9 +107,9 @@ export class WechatAuthService {
    * @returns {string} - 返回生成的微信扫码登录URL
    */
   generateWechatLoginUrl(pageUrl: string): string {
-    const redirectUri = `http://${getServerIp()}:${APP.PORT}/api/wechat-auth/wx-login-callback?redirectUri=${pageUrl}`;
+    const redirectUri = `http://${getServerIp()}:${APP.PORT}/api/wechat-auth/wx-login-callback?redirectUri=${encodeURIComponent(pageUrl)}`;
     logger.info(redirectUri, 'redirectUri');
-    const wechatUrl = `https://open.weixin.qq.com/connect/qrconnect?appid=${this.appId}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=code&scope=&state=STATE#wechat_redirect`;
+    const wechatUrl = `https://open.weixin.qq.com/connect/qrconnect?appid=${this.appId}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=code&scope=snsapi_login&state=STATE#wechat_redirect`;
     return wechatUrl;
   }
 
