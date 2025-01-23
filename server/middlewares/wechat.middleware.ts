@@ -92,6 +92,12 @@ export class WechatAuthMiddleware implements NestMiddleware {
   }
 
   async use(req: Request, res: Response, next: NextFunction) {
+    const user = req.session.user;
+    logger.info('user 用户信息', user);
+    if (user?.userId) {
+      logger.log('用户已存在，直接通过授权');
+      return next();
+    }
     try {
       const { appId } = wechatConfig;
       logger.log('处理请求URL:', req.originalUrl);
@@ -134,8 +140,16 @@ export class WechatAuthMiddleware implements NestMiddleware {
       logger.log('处理授权回调');
       // 获取重定向URL
       const redirectUrl = req.query.redirectUrl as string;
-      const userInfo = await this.wechatAuthService.getAccessToken(code);
-      logger.info(userInfo, '获取用户信息成功');
+      const { user: userInfo, token } =
+        await this.wechatAuthService.getAccessToken(code);
+      res.cookie('jwt', token.accessToken, {
+        sameSite: true,
+        httpOnly: true,
+      });
+      res.cookie('userId', userInfo.userId);
+      req.session.user = userInfo;
+      logger.info(user, '获取用户信息成功===');
+      logger.info(token, '获取token成功===');
       // 如果重定向URL存在，则处理授权回调
       if (redirectUrl) {
         const decodedRedirectUrl = decodeURIComponent(redirectUrl);

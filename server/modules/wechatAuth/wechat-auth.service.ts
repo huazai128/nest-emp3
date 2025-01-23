@@ -4,6 +4,8 @@ import { createLogger } from '@app/utils/logger';
 import { getServerIp } from '@app/utils/util';
 import { Injectable } from '@nestjs/common';
 import axios from 'axios';
+import { UserService } from '../user/user.service';
+import { AuthInfo } from '@app/interfaces/auth.interface';
 
 const logger = createLogger({
   scope: 'WechatAuthService',
@@ -18,17 +20,18 @@ const logger = createLogger({
 export class WechatAuthService {
   private readonly appId: string;
   private readonly appSecret: string;
-  constructor() {
+  constructor(private readonly userService: UserService) {
     this.appId = wechatConfig.appId;
     this.appSecret = wechatConfig.appSecret;
   }
 
   /**
    * 通过code获取access_token
+   * @param code - 微信授权码
+   * @returns 返回用户信息或抛出错误
    */
-  async getAccessToken(code: string) {
-    const url = `https://api.weixin.qq.com/sns/oauth2/access_token?appid=${this.appId}&secret=${this.appSecret}&code=${code}&grant_type=authorization_code`;
-
+  async getAccessToken(code: string): Promise<AuthInfo> {
+    const url: string = `https://api.weixin.qq.com/sns/oauth2/access_token?appid=${this.appId}&secret=${this.appSecret}&code=${code}&grant_type=authorization_code`;
     try {
       const response = await axios.get(url);
       if (response.data) {
@@ -37,11 +40,13 @@ export class WechatAuthService {
           response.data.openid,
         );
         logger.info(data, '获取用户信息成功');
+        const res = await this.userService.loginWx(data);
+        return res;
       } else {
-        throw new Error('获取access_token失败: ' + response.data.errmsg);
+        throw new Error(`获取access_token失败: ${response.data.errmsg}`);
       }
     } catch (error) {
-      throw new Error('获取access_token失败: ' + error.message);
+      throw new Error(`获取access_token失败: ${error.message}`);
     }
   }
 

@@ -45,12 +45,22 @@ export class User {
   userId: number;
 
   // 用户账号，必填字段
-  @IsNotEmpty({ message: '请输入您的账号' })
+  @IsOptional()
+  @IsString()
+  @prop()
+  account?: string; // 账号可选
+
+  @IsOptional()
+  @IsString()
+  @prop({ select: false })
+  password?: string; // 密码可选
+
+  @ValidateIf((o) => !o.openid)
+  @IsNotEmpty({ message: '请输入您的账号或密码' })
   @IsString()
   @IsDefined()
-  @ValidateIf((o) => !o.openid) // 如果没有OpenID，则需要账号
   @prop({ required: true })
-  account?: string;
+  openid?: string; // OpenID必填
 
   // 用户头像，默认为null
   @ValidateIf((o) => o.avatar !== null)
@@ -58,14 +68,6 @@ export class User {
   @IsOptional()
   @prop({ default: null })
   avatar?: string | null;
-
-  // 用户密码，必填字段，不在查询中选择
-  @IsNotEmpty({ message: '请输入您的密码' })
-  @IsString()
-  @IsDefined()
-  @ValidateIf((o) => !o.openid) // 如果没有OpenID，则需要密码
-  @prop({ required: true, select: false })
-  password?: string;
 
   // 用户角色，默认为[0]
   @ValidateIf((o) => o.role !== undefined)
@@ -82,12 +84,6 @@ export class User {
   // 更新时间，默认当前时间
   @prop({ default: Date.now })
   update_at?: Date;
-
-  // 用户的OpenID，必填且唯一
-  @IsNotEmpty({ message: 'openid不能为空' })
-  @IsString()
-  @prop({ required: true, unique: true })
-  openid?: string;
 
   // 用户昵称，可选字段
   @ValidateIf((o) => o.nickname !== undefined)

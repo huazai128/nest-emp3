@@ -1,5 +1,11 @@
 import { Controller, Get, Post, Body, Param } from '@nestjs/common';
 import { UserService } from './user.service';
+import { createLogger } from '@app/utils/logger';
+
+const logger = createLogger({
+  scope: 'UserController',
+  time: true,
+});
 
 /**
  * 用户控制器
@@ -16,6 +22,7 @@ export class UserController {
    */
   @Post('create')
   createUser(@Body() userData: any) {
+    logger.info('createUser', userData);
     // return this.userService.createUser(userData);
   }
 
@@ -26,6 +33,7 @@ export class UserController {
    */
   @Get(':id')
   getUser(@Param('id') userId: number) {
+    logger.info('getUser', userId);
     // return this.userService.getUser(userId);
   }
 
@@ -37,6 +45,7 @@ export class UserController {
    */
   @Post('update/:id')
   updateUser(@Param('id') userId: number, @Body() userData: any) {
+    logger.info('updateUser', userId, userData);
     // return this.userService.updateUser(userId, userData);
   }
 }

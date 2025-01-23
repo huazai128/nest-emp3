@@ -16,7 +16,7 @@ export class WechatAuthController {
    */
   @Get('wx-login-callback')
   async handleWechatAuth(@Query('code') code: string) {
-    logger.info('handleWechatAuth=====', code);
+    logger.info('handleWechatAuth', code);
     this.wechatAuthService.handleWechatLoginCallback(code);
     logger.info('handleWechatAuth');
   }

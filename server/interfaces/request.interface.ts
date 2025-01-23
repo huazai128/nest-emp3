@@ -1,6 +1,5 @@
 import { Request } from 'express';
-import { UserInfo } from './user.interface';
-
+import { UserInfo } from './auth.interface';
 declare module 'express-session' {
   interface SessionData {
     user?: UserInfo;

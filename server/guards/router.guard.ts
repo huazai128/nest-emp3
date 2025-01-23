@@ -4,6 +4,12 @@ import { HttpUnauthorizedError } from '@app/errors/unauthorized.error';
 import { Reflector } from '@nestjs/core';
 import { Roles } from '@app/decorators/roles.decorator';
 import { get } from 'lodash';
+import { createLogger } from '@app/utils/logger';
+
+const logger = createLogger({
+  scope: 'RouterGuard',
+  time: true,
+});
 
 /**
  * 路由守卫
@@ -17,16 +23,15 @@ export class RouterGuard extends LoggedInGuard {
 
   async canActivate(context: ExecutionContext) {
     // 获取当前处理程序的角色信息
-    const roles = this.reflector.get(Roles, context.getHandler());
-    console.log('roles===========', roles);
-    // 如果没有角色信息，允许访问
+    // const roles = this.reflector.get(Roles, context.getHandler());
     // if (!roles) {
-    //   return true;
+    //   throw new HttpUnauthorizedError('没有权限访问');
     // }
 
     const request = context.switchToHttp().getRequest();
     // 从请求中获取用户信息
     const user = get(request, 'session.user');
+    logger.log('RouterGuard', user);
     // 检查是否为微信H5访问，如果是则不进行拦截
     const userAgent = request.headers['user-agent'];
     const isWechatH5 = /MicroMessenger/i.test(userAgent);
@@ -43,7 +48,6 @@ export class RouterGuard extends LoggedInGuard {
   }
 
   handleRequest(error, authInfo, errInfo) {
-    console.log('authInfo=======', authInfo);
     // 处理请求的授权信息
     if (authInfo && !error && !errInfo) {
       return authInfo;

@@ -5,6 +5,7 @@ import { InjectModel } from '@app/transformers/model.transform';
 import { createLogger } from '@app/utils/logger';
 import { AUTH } from '@app/configs';
 import { JwtService } from '@nestjs/jwt';
+import { AuthInfo } from '@app/interfaces/auth.interface';
 
 const logger = createLogger({
   scope: 'UserService',
@@ -28,12 +29,11 @@ export class UserService {
    * @param userData - 用户数据
    * @returns 用户信息
    */
-  public async loginWx(userData: any): Promise<any> {
+  public async loginWx(userData: any): Promise<AuthInfo> {
     // 根据用户的openId查找现有用户
     let existingUser = await this.authModel.findOne({
-      openId: userData.openId,
+      openid: userData.openid,
     });
-
     // 如果没有找到现有用户，则创建一个新用户
     if (!existingUser) {
       existingUser = await this.authModel.create(userData);
@@ -48,7 +48,16 @@ export class UserService {
       existingUser.openid || '',
       existingUser.nickname || '',
     );
-    return { user: existingUser, token };
+    logger.info('loginWx', existingUser);
+    return {
+      user: {
+        userId: existingUser.userId,
+        openid: existingUser.openid || '',
+        nickname: existingUser.nickname || '',
+        account: existingUser.account || '',
+      },
+      token,
+    };
   }
   /**
    * 生成token

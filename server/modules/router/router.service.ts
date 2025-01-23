@@ -33,7 +33,7 @@ export class RouterSercive {
     const data: CommonData = {
       userInfo: {
         name: user?.nickname,
-        userId: user?.id?.toString(),
+        userId: user?.userId?.toString(),
       },
       openId: wechatConfig.appId,
     };

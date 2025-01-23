@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { WechatAuthController } from './wechat-auth.controller';
 import { WechatAuthService } from './wechat-auth.service';
+import { UserModule } from '../user/user.module';
 
 /**
  * 微信授权模块
@@ -12,7 +13,7 @@ import { WechatAuthService } from './wechat-auth.service';
  * 4. 刷新token
  */
 @Module({
-  imports: [],
+  imports: [UserModule],
   controllers: [WechatAuthController],
   providers: [WechatAuthService],
   exports: [WechatAuthService],
