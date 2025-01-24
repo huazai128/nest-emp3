@@ -5,6 +5,13 @@ declare global {
       wechatLoginUrl?: string;
       openId?: string;
     };
+    wxConfig?: {
+      appId: string;
+      timestamp: number;
+      nonceStr: string;
+      signature: string;
+    };
+    wx?: any;
   }
 
   class WxLogin {

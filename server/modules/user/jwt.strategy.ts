@@ -1,9 +1,16 @@
-import { AUTH } from '@app/configs'; // 导入配置文件中的AUTH
-import { Injectable } from '@nestjs/common'; // 导入NestJS的Injectable装饰器
-import { PassportStrategy } from '@nestjs/passport'; // 导入PassportStrategy类
-import { Strategy } from 'passport-jwt'; // 导入JWT策略
-import { UserService } from './user.service'; // 导入用户服务
-import { Request } from 'express'; // 导入Express请求对象
+import { AUTH } from '@app/configs';
+import { Injectable } from '@nestjs/common';
+import { PassportStrategy } from '@nestjs/passport';
+import { Strategy } from 'passport-jwt';
+import { UserService } from './user.service';
+import { Request } from 'express';
+import { get } from 'lodash';
+import { createLogger } from '@app/utils/logger';
+
+const logger = createLogger({
+  scope: 'JwtStrategy',
+  time: true,
+});
 
 /**
  * JWT策略
@@ -18,7 +25,8 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       jwtFromRequest: (req: Request) => {
         // 从请求中获取JWT
         // 从cookie中获取token
-        const token = req.cookies['jwt']; // 获取cookie中的jwt
+        const token = get(req, 'cookies.jwt');
+        logger.log(token, 'token');
         return token || null; // 如果jwt为空，返回null以避免报错
       },
       secretOrKey: AUTH.jwtTokenSecret, // 设置JWT的密钥

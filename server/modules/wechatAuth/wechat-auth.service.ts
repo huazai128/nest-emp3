@@ -6,11 +6,16 @@ import { Injectable } from '@nestjs/common';
 import axios from 'axios';
 import { UserService } from '../user/user.service';
 import { AuthInfo } from '@app/interfaces/auth.interface';
+import * as crypto from 'crypto';
+import { CacheService } from '@app/processors/redis/cache.service';
+import { REDIS_SERVICE } from '@app/constants/redis.constant';
 
 const logger = createLogger({
   scope: 'WechatAuthService',
   time: true,
 });
+
+const WX_CONFIG_TOKEN = `${REDIS_SERVICE}_WX_CONFIG_TOKEN`;
 
 /**
  * 微信授权服务
@@ -20,7 +25,10 @@ const logger = createLogger({
 export class WechatAuthService {
   private readonly appId: string;
   private readonly appSecret: string;
-  constructor(private readonly userService: UserService) {
+  constructor(
+    private readonly userService: UserService,
+    private readonly cacheService: CacheService,
+  ) {
     this.appId = wechatConfig.appId;
     this.appSecret = wechatConfig.appSecret;
   }
@@ -139,5 +147,91 @@ export class WechatAuthService {
     } catch (error) {
       throw new Error('处理微信扫码登录回调失败: ' + error.message);
     }
+  }
+
+  /**
+   * 获取微信JS SDK配置
+   * @param {string} url - 当前页面的URL
+   * @returns {Promise<Object>} - 返回微信JS SDK的配置对象
+   */
+  async getWxConfig(url: string): Promise<object> {
+    try {
+      // 尝试从缓存中获取配置字符串
+      const configString = await this.cacheService.get<string>(WX_CONFIG_TOKEN);
+      logger.info(configString, 'configString');
+      if (configString) {
+        // 如果缓存中存在配置，解析并返回
+        return JSON.parse(configString);
+      }
+      // 获取access_token
+      const accessToken = await this.getAccessConfigToken();
+      // 获取JS API票据
+      const ticket = await this.getJsApiTicket(accessToken);
+      // 生成随机字符串
+      const nonceStr = Math.random().toString(36).substr(2, 15);
+      // 获取当前时间戳
+      const timestamp = Math.floor(Date.now() / 1000);
+      // 生成签名
+      const signature = this.generateSignature(
+        ticket,
+        nonceStr,
+        timestamp,
+        url,
+      );
+      // 构建配置对象
+      const config = { appId: this.appId, timestamp, nonceStr, signature };
+      // 将配置对象存入缓存，设置过期时间为7200秒
+      await this.cacheService.set(
+        WX_CONFIG_TOKEN,
+        JSON.stringify(config),
+        7200,
+      );
+      return config; // 返回配置对象
+    } catch (error) {
+      // 记录错误日志并抛出异常
+      logger.error(error, '获取微信JS SDK配置失败');
+      throw new Error('获取微信JS SDK配置失败: ' + error.message);
+    }
+  }
+
+  /**
+   * 获取微信配置的access_token
+   * 该方法通过调用微信API获取access_token，用于后续的API请求
+   * @returns {Promise<string>} - 返回获取到的access_token
+   */
+  async getAccessConfigToken() {
+    const tokenUrl = `https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=${this.appId}&secret=${this.appSecret}`;
+    const tokenResponse = await axios.get(tokenUrl);
+    return tokenResponse.data.access_token;
+  }
+
+  /**
+   * 获取微信JS API票据
+   * 该方法通过调用微信API获取JS API票据，用于后续的API请求
+   * @param {string} accessToken - 用于获取JS API票据的access_token
+   * @returns {Promise<string>} - 返回获取到的JS API票据
+   */
+  async getJsApiTicket(accessToken: string) {
+    const ticketUrl = `https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token=${accessToken}&type=jsapi`;
+    const ticketResponse = await axios.get(ticketUrl);
+    return ticketResponse.data.ticket;
+  }
+
+  /**
+   * 生成微信JS SDK签名
+   * @param {string} ticket - 微信JS API票据
+   * @param {string} nonceStr - 随机字符串
+   * @param {number} timestamp - 时间戳
+   * @param {string} url - 当前页面的URL
+   * @returns {string} - 返回生成的签名
+   */
+  private generateSignature(
+    ticket: string,
+    nonceStr: string,
+    timestamp: number,
+    url: string,
+  ): string {
+    const stringToSign = `jsapi_ticket=${ticket}&noncestr=${nonceStr}&timestamp=${timestamp}&url=${url}`;
+    return crypto.createHash('sha1').update(stringToSign).digest('hex');
   }
 }

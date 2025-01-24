@@ -1,8 +1,9 @@
 import axios from 'axios';
 import type { AxiosRequestConfig as _AxiosRequestConfig, Method } from 'axios';
 import type { ResponseData } from '@src/interfaces/response.iterface';
-import config from '@src/configs';
 import { pickBy } from 'lodash';
+
+const apiHost = window.INIT_DATA?.apiHost;
 
 /**
  * 扩展 AxiosRequestConfig 类型,添加请求开始时间
@@ -69,7 +70,7 @@ function httpCommon<T>(
   let axiosConfig: AxiosRequestConfig = {
     method,
     url: apiUrl,
-    baseURL: config.apiHost,
+    baseURL: apiHost,
   };
   const instance = axios.create();
 

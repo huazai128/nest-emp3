@@ -1,6 +1,8 @@
 import { createLogger } from '@app/utils/logger';
-import { Controller, Get, Query } from '@nestjs/common';
+import { Controller, Get, Query, Req } from '@nestjs/common';
 import { WechatAuthService } from './wechat-auth.service';
+import { getWxUrlFromReq } from '@app/utils/wx';
+import { Request } from 'express';
 
 const logger = createLogger({
   scope: 'WechatAuthController',
@@ -19,5 +21,16 @@ export class WechatAuthController {
     logger.info('handleWechatAuth', code);
     this.wechatAuthService.handleWechatLoginCallback(code);
     logger.info('handleWechatAuth');
+  }
+  /**
+   * 获取微信JS SDK配置
+   * @param {string} url - 当前页面的URL
+   * @returns {Promise<Object>} - 返回微信JS SDK的配置对象
+   */
+  @Get('wx-config')
+  async getWxConfig(@Req() req: Request) {
+    const url = getWxUrlFromReq(req);
+    logger.info('getWxConfig', url);
+    return this.wechatAuthService.getWxConfig(url);
   }
 }

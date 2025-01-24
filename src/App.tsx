@@ -1,5 +1,6 @@
 import './App.css';
-import React, { useLayoutEffect } from 'react';
+import React, { useEffect, useLayoutEffect } from 'react';
+import { getWxConfig } from './utils/wxConfig';
 const App = () => {
   // const wechatLoginUrl = window.INIT_DATA?.wechatLoginUrl;
   const openId = window.INIT_DATA?.openId;
@@ -18,6 +19,10 @@ const App = () => {
       });
     }
   }, [openId]);
+
+  useEffect(() => {
+    getWxConfig();
+  }, []);
 
   return (
     <div className="content">
