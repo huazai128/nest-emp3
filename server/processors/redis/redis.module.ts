@@ -2,6 +2,7 @@ import {
   RedisModuleAsyncOptions,
   RedisModuleOptions,
   RedisModuleOptionsFactory,
+  RedisSingleOptions,
 } from '@app/interfaces/redis.interface';
 import { DynamicModule, Global, Module, Provider } from '@nestjs/common';
 import {
@@ -33,6 +34,15 @@ export class RedisCoreModule {
    * @returns 动态模块配置
    */
   static forRoot(options: RedisModuleOptions): DynamicModule {
+    // 打印配置日志
+    logger.info('初始化Redis模块配置', {
+      type: options.type,
+      ...(options.type === 'single' && { url: options.url }), // 仅当单机模式时打印url
+      options: {
+        ...options.options,
+      },
+    });
+
     // 创建Redis配置提供器
     const redisOptionsProvider: Provider = {
       provide: getRedisOptionsToken(),
@@ -59,10 +69,25 @@ export class RedisCoreModule {
    * @returns 动态模块配置
    */
   static forRootAsync(options: RedisModuleAsyncOptions): DynamicModule {
+    // 打印异步配置日志
+    logger.info('初始化异步Redis模块配置', {
+      useClass: options.useClass?.name,
+      useExisting: options.useExisting?.name,
+      useFactory: !!options.useFactory,
+    });
+
     // 创建Redis连接提供器
     const redisConnectionProvider: Provider = {
       provide: getRedisConnectionToken(),
       useFactory(options: RedisModuleOptions) {
+        // 打印最终生成的配置
+        logger.info('生成Redis连接配置', {
+          type: options.type,
+          ...(options.type === 'single' && { url: options.url }), // 仅当单机模式时打印url
+          options: {
+            ...options.options,
+          },
+        });
         return createRedisConnection(options);
       },
       inject: [getRedisOptionsToken()], // 注入Redis配置
@@ -143,7 +168,16 @@ export class RedisCoreModule {
       async useFactory(
         optionsFactory: RedisModuleOptionsFactory,
       ): Promise<RedisModuleOptions> {
-        return await optionsFactory.createRedisModuleOptions();
+        const config = await optionsFactory.createRedisModuleOptions();
+        // 打印生成的配置
+        logger.info('通过工厂方法生成Redis配置', {
+          type: config.type,
+          ...(config.type === 'single' && {
+            url: (config as RedisSingleOptions).url,
+          }),
+          options: config.options,
+        });
+        return config;
       },
       inject: [options.useClass || options.useExisting] as never,
     };

@@ -9,6 +9,17 @@ const config: ConfigServer = {
   redis: {
     type: 'single',
     url: 'redis://localhost:6379',
+    // 哨兵模式
+    // options: {
+    //   sentinels: [
+    //     {
+    //       host: 'localhost',
+    //       port: 26379,
+    //     },
+    //   ],
+    //   sentinelPassword: '',
+    //   name: 'master',
+    // },
   },
   wechat: wechatConfig,
 };

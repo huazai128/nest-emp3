@@ -15,6 +15,7 @@ const logger = createLogger({
   time: true,
 });
 
+// 微信JS SDK配置
 const WX_CONFIG_TOKEN = `${REDIS_SERVICE}_WX_CONFIG_TOKEN`;
 
 /**
@@ -158,7 +159,7 @@ export class WechatAuthService {
     try {
       // 尝试从缓存中获取配置字符串
       const configString = await this.cacheService.get<string>(WX_CONFIG_TOKEN);
-      logger.info(configString, 'configString');
+      logger.info(configString, '获取微信JS SDK配置');
       if (configString) {
         // 如果缓存中存在配置，解析并返回
         return JSON.parse(configString);
