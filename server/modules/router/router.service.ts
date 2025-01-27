@@ -4,6 +4,9 @@ import { Injectable } from '@nestjs/common';
 import { Request } from 'express';
 import { WechatAuthService } from '../wechatAuth/wechat-auth.service';
 import { wechatConfig } from '@app/config';
+import { createLogger } from '@app/utils/logger';
+
+const logger = createLogger({ scope: 'router', time: true });
 
 interface CommonData {
   userInfo?: {

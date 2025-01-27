@@ -4,6 +4,10 @@ declare global {
       apiHost: string;
       wechatLoginUrl?: string;
       openId?: string;
+      userInfo?: {
+        name: string;
+        userId: string;
+      };
     };
     wxConfig?: {
       appId: string;

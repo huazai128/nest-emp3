@@ -5,11 +5,13 @@ import {
   Header,
   Req,
   UseGuards,
+  Session,
 } from '@nestjs/common';
 import { Request } from 'express';
 import { RouterSercive } from './router.service';
 import { createLogger } from '@app/utils/logger';
 import { RouterGuard } from '@app/guards/router.guard';
+import { SessionData } from 'express-session';
 
 const logger = createLogger({
   scope: 'RouterController',
@@ -63,9 +65,10 @@ export class RouterController {
     const accessUrl = req.protocol + '://' + req.get('host') + req.originalUrl;
     logger.log('访问的连接:', accessUrl);
     // 获取公共数据
-    const commonData = this.routeService.getCommonData(req);
     const wechatLoginUrl =
       await this.routeService.generateWechatLoginUrl(accessUrl);
+    const commonData = this.routeService.getCommonData(req);
+
     return {
       data: {
         ...commonData,
