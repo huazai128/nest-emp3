@@ -31,7 +31,7 @@ export const COOKIE_KEY = '@-nest-emp3-*5&^^%%$$#$##-qadlp]]';
 
 // Session配置
 export const SESSION: session.SessionOptions = {
-  secret: 'grpc_client_session_secret', // session密钥
+  secret: 'wx-client-session-secret-das23-4241nsdf-%52132=-', // session密钥
   name: 'sid', // cookie名称
   saveUninitialized: false, // 是否自动保存未初始化的会话
   resave: false, // 是否每次都重新保存会话

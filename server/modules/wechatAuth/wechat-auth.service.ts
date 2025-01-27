@@ -157,21 +157,28 @@ export class WechatAuthService {
    */
   async getWxConfig(url: string): Promise<object> {
     try {
-      // 尝试从缓存中获取配置字符串
-      const configString = await this.cacheService.get<string>(WX_CONFIG_TOKEN);
-      logger.info(configString, '获取微信JS SDK配置');
-      if (configString) {
-        // 如果缓存中存在配置，解析并返回
-        return JSON.parse(configString);
+      // 尝试从缓存中获取access_token和ticket
+      const cachedConfig = await this.cacheService.get<string>(WX_CONFIG_TOKEN);
+      let accessToken: string;
+      let ticket: string;
+      if (cachedConfig) {
+        const tokenConfig = JSON.parse(cachedConfig); // 如果缓存存在，直接返回
+        accessToken = tokenConfig.accessToken;
+        ticket = tokenConfig.ticket;
+      } else {
+        // 获取access_token和JS API票据
+        accessToken = await this.getAccessConfigToken();
+        ticket = await this.getJsApiTicket(accessToken);
+        await this.cacheService.set(
+          WX_CONFIG_TOKEN,
+          JSON.stringify({ accessToken, ticket }),
+          7200,
+        );
       }
-      // 获取access_token
-      const accessToken = await this.getAccessConfigToken();
-      // 获取JS API票据
-      const ticket = await this.getJsApiTicket(accessToken);
-      // 生成随机字符串
-      const nonceStr = Math.random().toString(36).substr(2, 15);
-      // 获取当前时间戳
+      // 生成随机字符串和时间戳
+      const nonceStr = Math.random().toString(36).substring(2, 15);
       const timestamp = Math.floor(Date.now() / 1000);
+
       // 生成签名
       const signature = this.generateSignature(
         ticket,
@@ -179,17 +186,10 @@ export class WechatAuthService {
         timestamp,
         url,
       );
-      // 构建配置对象
-      const config = { appId: this.appId, timestamp, nonceStr, signature };
-      // 将配置对象存入缓存，设置过期时间为7200秒
-      await this.cacheService.set(
-        WX_CONFIG_TOKEN,
-        JSON.stringify(config),
-        7200,
-      );
-      return config; // 返回配置对象
+
+      // 构建并返回配置对象
+      return { appId: this.appId, timestamp, nonceStr, signature };
     } catch (error) {
-      // 记录错误日志并抛出异常
       logger.error(error, '获取微信JS SDK配置失败');
       throw new Error('获取微信JS SDK配置失败: ' + error.message);
     }
