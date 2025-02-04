@@ -2,14 +2,185 @@
 <html lang="<%= htmlWebpackPlugin.options.lang %>">
   <head>
     <title><%= htmlWebpackPlugin.options.title %></title>
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <!-- 设置IE兼容性 -->
+    <meta charset="UTF-8" />
+    <!-- 设置字符编码为UTF-8 -->
+    <meta name="format-detection" content="telephone=no" />
+    <!-- 禁用电话格式检测 -->
+    <meta http-equiv="x-dns-prefetch-control" content="on" />
+    <!-- 启用DNS预取 -->
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no"
+    />
+    <!-- 设置视口 -->
+    <link rel="dns-prefetch" href="//*.com" />
+    <!-- DNS预取 -->
     <script
       typet="text/javascript"
       src="https://res2.wx.qq.com/open/js/jweixin-1.6.0.js"
     ></script>
+    <!-- 引入微信JS SDK -->
+    <script type="text/javascript">
+      /**
+       * 手淘 H5 适配方案
+       * https://github.com/amfe/article/issues/17
+       *
+       */
+      (function (win, lib) {
+        var doc = win.document; // 获取文档对象
+        var docEl = doc.documentElement; // 获取文档根元素
+        var metaEl = doc.querySelector('meta[name="viewport"]'); // 获取视口meta元素
+        var flexibleEl = doc.querySelector('meta[name="flexible"]'); // 获取flexible meta元素
+        var dpr = 0; // 设备像素比
+        var scale = 0; // 缩放比例
+        var tid; // 定时器ID
+        var flexible = lib.flexible || (lib.flexible = {}); // 初始化flexible对象
+
+        // 检查meta元素并获取初始缩放比例和设备像素比
+        if (metaEl) {
+          var match = metaEl
+            .getAttribute('content')
+            .match(/initial\-scale=([\d\.]+)/); // 匹配初始缩放比例
+          if (match) {
+            scale = parseFloat(match[1]); // 解析缩放比例
+            dpr = parseInt(1 / scale); // 计算设备像素比
+          }
+        } else if (flexibleEl) {
+          var content = flexibleEl.getAttribute('content'); // 获取flexible meta内容
+          if (content) {
+            var initialDpr = content.match(/initial\-dpr=([\d\.]+)/); // 匹配初始设备像素比
+            var maximumDpr = content.match(/maximum\-dpr=([\d\.]+)/); // 匹配最大设备像素比
+            if (initialDpr) {
+              dpr = parseFloat(initialDpr[1]); // 解析初始设备像素比
+              scale = parseFloat((1 / dpr).toFixed(2)); // 计算缩放比例
+            }
+            if (maximumDpr) {
+              dpr = parseFloat(maximumDpr[1]); // 解析最大设备像素比
+              scale = parseFloat((1 / dpr).toFixed(2)); // 计算缩放比例
+            }
+          }
+        }
+
+        // 如果没有找到dpr和scale，则根据设备类型进行设置
+        if (!dpr && !scale) {
+          var isAndroid = win.navigator.appVersion.match(/android/gi); // 检测是否为Android设备
+          var isIPhone = win.navigator.appVersion.match(/iphone/gi); // 检测是否为iPhone设备
+          var devicePixelRatio = win.devicePixelRatio; // 获取设备像素比
+          if (isIPhone) {
+            // iOS下，对于2和3的屏，用2倍的方案，其余的用1倍方案
+            if (devicePixelRatio >= 3 && (!dpr || dpr >= 3)) {
+              dpr = 3; // 设置设备像素比为3
+            } else if (devicePixelRatio >= 2 && (!dpr || dpr >= 2)) {
+              dpr = 2; // 设置设备像素比为2
+            } else {
+              dpr = 1; // 设置设备像素比为1
+            }
+          } else {
+            // 其他设备下，仍旧使用1倍的方案
+            dpr = 1; // 设置设备像素比为1
+          }
+          scale = 1 / dpr; // 计算缩放比例
+        }
+
+        docEl.setAttribute('data-dpr', dpr); // 设置data-dpr属性
+
+        // 为统一组件样式
+        docEl.setAttribute('class', 'flexible'); // 设置根元素的class为flexible
+        if (!metaEl) {
+          metaEl = doc.createElement('meta'); // 创建meta元素
+          metaEl.setAttribute('name', 'viewport'); // 设置meta元素的name为viewport
+          metaEl.setAttribute(
+            'content',
+            'initial-scale=' +
+              scale +
+              ', maximum-scale=' +
+              scale +
+              ', minimum-scale=' +
+              scale +
+              ', user-scalable=no', // 设置视口的缩放属性
+          );
+          if (docEl.firstElementChild) {
+            docEl.firstElementChild.appendChild(metaEl); // 将meta元素添加到根元素
+          } else {
+            var wrap = doc.createElement('div'); // 创建一个div元素
+            wrap.appendChild(metaEl); // 将meta元素添加到div中
+            doc.write(wrap.innerHTML); // 将div的内容写入文档
+          }
+        }
+
+        // 刷新rem值的函数
+        function refreshRem() {
+          var width = docEl.getBoundingClientRect().width; // 获取根元素的宽度
+          if (width / dpr > 540) {
+            width = 540 * dpr; // 限制最大宽度为540
+          }
+          var rem = width / 10; // 计算rem值
+          docEl.style.fontSize = rem + 'px'; // 设置根元素的字体大小
+          flexible.rem = win.rem = rem; // 设置flexible对象的rem值
+        }
+
+        // 监听窗口大小变化事件
+        win.addEventListener(
+          'resize',
+          function () {
+            clearTimeout(tid); // 清除定时器
+            tid = setTimeout(refreshRem, 300); // 设置定时器
+          },
+          false,
+        );
+        // 监听页面显示事件
+        win.addEventListener(
+          'pageshow',
+          function (e) {
+            if (e.persisted) {
+              clearTimeout(tid); // 清除定时器
+              tid = setTimeout(refreshRem, 300); // 设置定时器
+            }
+          },
+          false,
+        );
+
+        // 页面加载完成后设置字体大小
+        if (doc.readyState === 'complete') {
+          doc.body.style.fontSize = 12 * dpr + 'px'; // 设置页面字体大小
+        } else {
+          doc.addEventListener(
+            'DOMContentLoaded',
+            function (e) {
+              doc.body.style.fontSize = 12 * dpr + 'px'; // 设置页面字体大小
+            },
+            false,
+          );
+        }
+
+        refreshRem(); // 刷新rem值
+
+        flexible.dpr = win.dpr = dpr; // 设置flexible对象的dpr值
+        flexible.refreshRem = refreshRem; // 设置flexible对象的refreshRem方法
+        flexible.rem2px = function (d) {
+          var val = parseFloat(d) * this.rem; // 将rem转换为px
+          if (typeof d === 'string' && d.match(/rem$/)) {
+            val += 'px'; // 如果是rem单位，添加px后缀
+          }
+          return val; // 返回转换后的值
+        };
+        flexible.px2rem = function (d) {
+          var val = parseFloat(d) / this.rem; // 将px转换为rem
+          if (typeof d === 'string' && d.match(/px$/)) {
+            val += 'rem'; // 如果是px单位，添加rem后缀
+          }
+          return val; // 返回转换后的值
+        };
+      })(window, window['lib'] || (window['lib'] = {})); // 执行自执行函数
+    </script>
   </head>
 
   <body>
     <div id="emp-root"></div>
+    <!-- 页面根元素 -->
     <script src="https://res.wx.qq.com/connect/zh_CN/htmledition/js/wxLogin.js"></script>
+    <!-- 引入微信登录JS -->
   </body>
 </html>

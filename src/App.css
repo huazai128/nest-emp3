@@ -1,3 +1,6 @@
+@import './styles/flex.scss';
+@import './styles/reset.scss';
+
 body {
   margin: 0;
   color: #fff;
@@ -15,12 +18,12 @@ body {
 }
 
 .content h1 {
-  font-size: 3.6rem;
+  font-size: 16px;
   font-weight: 700;
 }
 
 .content p {
-  font-size: 1.2rem;
+  font-size: 12px;
   font-weight: 400;
   opacity: 0.5;
 }

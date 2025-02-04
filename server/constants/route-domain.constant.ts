@@ -16,7 +16,7 @@ export const ROUTE_DOMAIN_MAP = new Map<string, string>([
  * 微信静默授权路由数组
  * 用于存储所有需要微信静默授权的路由路径，这里配置的是页面路由
  */
-export const WECHAT_SILENT_AUTH_ROUTES = ['/'];
+export const WECHAT_SILENT_AUTH_ROUTES: string[] = [];
 
 /**
  * 微信已登录静默授权路由数组
