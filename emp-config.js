@@ -24,6 +24,7 @@ export default defineConfig((store) => {
       alias: {
         '@src': resolve(__dirname, './src'),
       },
+      extensions: ['.js', '.jsx', '.ts', '.tsx', '.css', '.scss'],
     },
     server: {
       port: 8008,
@@ -45,14 +46,9 @@ export default defineConfig((store) => {
         entryCdn: `https://unpkg.com/@empjs/polyfill@0.0.1/dist/es.js`,
       },
     },
-    resolve: {
-      alias: {
-        '@src': resolve(__dirname, './src'),
-      },
-    },
     html: {
       template: resolve(__dirname, './views/index.html'),
-      filename: resolve(__dirname, './dist/views/index.html'), // 修改输出路径配置,将HTML文件输出到views目录
+      filename: resolve(__dirname, './dist/views/index.html'),
       title: '基础架构框架',
     },
     chain(chain) {
@@ -60,7 +56,7 @@ export default defineConfig((store) => {
         chain.devtool('source-map');
         chain.plugin('SourcemapUploadPlugin').use(
           new UploadSourceMapPlugin({
-            url: `http:localhost:5005/api/upload-zip`, // 上传url
+            url: `http:localhost:5005/api/upload-zip`,
             uploadPath: resolve(__dirname, './dist/client/js'),
             patterns: [/\js.map$/],
             requestOption: {
@@ -86,6 +82,45 @@ export default defineConfig((store) => {
           globPattern: 'src/!(styles)/**/*.scss',
         }),
       );
+
+      // 配置CSS Modules和PostCSS
+      chain.module
+        .rule('css')
+        .test(/\.(css|scss)$/)
+        .use('style-loader')
+        .loader('style-loader')
+        .end()
+        .use('css-loader')
+        .loader('css-loader')
+        .options({
+          importLoaders: 2,
+        })
+        .end()
+        .use('postcss-loader')
+        .loader('postcss-loader')
+        .options({
+          postcssOptions: {
+            plugins: [
+              [
+                'postcss-px-to-viewport',
+                {
+                  viewportWidth: 375,
+                  unitPrecision: 3,
+                  viewportUnit: 'rem',
+                  selectorBlackList: [],
+                  propList: ['*'],
+                  fontViewportUnit: 'rem',
+                  minPixelValue: 1,
+                  mediaQuery: true,
+                },
+              ],
+              'autoprefixer',
+            ],
+          },
+        })
+        .end()
+        .use('sass-loader')
+        .loader('sass-loader');
     },
   };
 });

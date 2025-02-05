@@ -1,0 +1,175 @@
+/*
+KISSY CSS Reset
+理念：清除和重置是紧密不可分的
+功能：统一不同浏览器的基础样式
+*/
+
+/* 清除内外边距 */
+body,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+hr,
+p,
+blockquote, /* 块引用 */
+dl,
+dt,
+dd,
+ul,
+ol,
+li, /* 列表元素 */
+pre, /* 预格式化文本 */
+fieldset,
+lengend,
+button,
+input,
+textarea, /* 表单元素 */
+th,
+td {
+  /* 表格元素 */
+  -webkit-box-sizing: border-box; /* Webkit内核浏览器 */
+  box-sizing: border-box; /* 标准盒模型 */
+  margin: 0; /* 外边距清零 */
+  padding: 0; /* 内边距清零 */
+  word-wrap: break-word; /* 允许长单词或URL地址换行到下一行 */
+  word-break: break-all; /* 允许在单词内换行 */
+  -webkit-appearance: none; /* 去除默认外观 */
+}
+
+/* 设置默认字体 */
+body,
+button,
+input,
+select,
+textarea {
+  /* 优先使用微软雅黑,降级使用其他无衬线字体 */
+  font:
+    12px/1 '微软雅黑',
+    Tahoma,
+    Helvetica,
+    Arial,
+    '\5b8b\4f53',
+    sans-serif; /*no*/
+}
+
+/* 标题字号设置 */
+h1 {
+  font-size: 48px; /* 主标题 */
+}
+h2 {
+  font-size: 42px; /* 次标题 */
+}
+h3 {
+  font-size: 36px; /* 三级标题 */
+}
+h4,
+h5,
+h6 {
+  font-size: 34px; /* 其他标题 */
+}
+p {
+  font-size: 24px; /* 正文字号 */
+}
+
+/* 文本格式化 */
+address,
+cite,
+dfn,
+em,
+var {
+  font-style: normal; /* 将斜体扶正 */
+}
+
+/* 代码字体 */
+code,
+kbd,
+pre,
+samp,
+tt {
+  font-family: '微软雅黑', Tahoma, Helvetica, Arial, '\5b8b\4f53', sans-serif;
+}
+
+small {
+  font-size: 12px; /*no*/ /* 小字号文本 */
+}
+
+/* 列表样式重置 */
+ul,
+ol {
+  list-style: none;
+}
+
+/* 链接样式重置 */
+a {
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: none;
+}
+a:active {
+  text-decoration: none;
+}
+
+/* 缩写和首字母 */
+abbr[title],
+acronym[title] {
+  cursor: help;
+  border-bottom: 1px dotted; /*no*/
+}
+
+/* 引用样式重置 */
+q:before,
+q:after {
+  content: '';
+}
+
+/* 表单元素重置 */
+legend {
+  color: #000;
+}
+fieldset,
+img {
+  border: none; /* 移除边框 */
+}
+
+/* 表格重置 */
+table {
+  border-spacing: 0;
+  border-collapse: collapse;
+}
+
+/* 分割线重置 */
+hr {
+  height: 1px; /*no*/
+  border: none;
+}
+
+/* HTML根元素设置 */
+html {
+  overflow-y: scroll; /* 始终显示纵向滚动条 */
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0); /* 移除触摸高亮 */
+}
+
+/* 数字输入框样式重置 */
+input[type='number']::-webkit-outer-spin-button,
+input[type='number']::-webkit-inner-spin-button {
+  margin: 0;
+  -webkit-appearance: none;
+}
+
+/* 占位符文本颜色 */
+::-webkit-input-placeholder {
+  color: #b2b2b2;
+}
+:-ms-input-placeholder {
+  color: #b2b2b2;
+}
+:-moz-placeholder {
+  color: #b2b2b2;
+}
+::-moz-placeholder {
+  color: #b2b2b2;
+}
