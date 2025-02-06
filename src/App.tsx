@@ -7,7 +7,7 @@ const App = () => {
   }, []);
 
   return (
-    <div className="content">
+    <div className="content flex-center">
       <h1>{window.INIT_DATA?.userInfo?.name || '华仔'}</h1>
       <p>Start building wonderful things with EMP</p>
     </div>

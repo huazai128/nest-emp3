@@ -2,7 +2,7 @@
  通用flex
 */
 .flex {
-  display: flex; // flex-direction: row; //主轴为水平方向，起点在左端
+  display: flex; /* flex-direction: row; 主轴为水平方向，起点在左端 */
 }
 
 .flex-row {
@@ -12,11 +12,11 @@
 
 .flex-col {
   display: flex;
-  flex-direction: column; //主轴为垂直方向，起点在上沿
+  flex-direction: column; /* 主轴为垂直方向，起点在上沿 */
 }
 
 .flex-center {
-  //垂直居中,水平居中
+  /* 垂直居中,水平居中 */
   display: flex;
   justify-content: center;
   align-items: center;
@@ -24,19 +24,19 @@
 }
 
 .flex-hcenter {
-  //水平居中
+  /* 水平居中 */
   display: flex;
   justify-content: center;
 }
 
 .flex-vcenter {
-  //垂直居中
+  /* 垂直居中 */
   display: flex;
   align-items: center;
 }
 
 .flex-col-center {
-  //垂直居中, 水平居中,  主轴为垂直方向，起点在上沿
+  /* 垂直居中, 水平居中, 主轴为垂直方向，起点在上沿 */
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -44,7 +44,7 @@
 }
 
 .flex-col-vcenter {
-  //水平居中,  主轴为垂直方向，起点在上沿
+  /* 水平居中, 主轴为垂直方向，起点在上沿 */
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -65,83 +65,83 @@
   box-sizing: border-box;
   flex: 0 1 auto;
   &.wrap {
-    //换行，第一行在上方
+    /* 换行，第一行在上方 */
     flex-wrap: wrap;
   }
   &.wrap-reverse {
-    //换行，第一行在上方
+    /* 换行，第一行在上方 */
     flex-wrap: wrap-reverse;
   }
   &.d-row-reverse {
-    //主轴为水平方向，起点在右端。
+    /* 主轴为水平方向，起点在右端 */
     flex-direction: row-reverse;
   }
   &.d-col-reverse {
-    //主轴为垂直方向，起点在下沿
+    /* 主轴为垂直方向，起点在下沿 */
     flex-direction: column-reverse;
   }
   &.d-column {
-    //主轴为垂直方向，起点在上沿
+    /* 主轴为垂直方向，起点在上沿 */
     flex-direction: column;
   }
   &.jc-start {
-    //主轴的项目左对齐
+    /* 主轴的项目左对齐 */
     justify-content: flex-start;
   }
   &.jc-center {
-    //主轴的项目居中
+    /* 主轴的项目居中 */
     justify-content: center;
   }
   &.jc-end {
-    //主轴的项目右对齐
+    /* 主轴的项目右对齐 */
     justify-content: flex-end;
   }
   &.jc-around {
-    //主轴的项目两侧的间隔相等
+    /* 主轴的项目两侧的间隔相等 */
     justify-content: space-around;
   }
   &.jc-between {
-    //两端对齐，项目之间的间隔都相等
+    /* 两端对齐，项目之间的间隔都相等 */
     justify-content: space-between;
   }
   &.ai-start {
-    //交叉轴的起点对齐
+    /* 交叉轴的起点对齐 */
     align-items: flex-start;
   }
   &.ai-center {
-    //交叉轴的中点对齐
+    /* 交叉轴的中点对齐 */
     align-items: center;
   }
   &.ai-end {
-    //交叉轴的终点对齐
+    /* 交叉轴的终点对齐 */
     align-items: flex-end;
   }
   &.ai-baseline {
-    //项目的第一行文字的基线对齐
+    /* 项目的第一行文字的基线对齐 */
     align-items: baseline;
   }
   &.ai-stretch {
-    //(默认值）：如果项目未设置高度或设为auto，将占满整个容器的高度。
+    /* (默认值）：如果项目未设置高度或设为auto，将占满整个容器的高度 */
     align-items: stretch;
   }
   &.ac-start {
-    //与交叉轴的起点对齐
+    /* 与交叉轴的起点对齐 */
     align-content: flex-start;
   }
   &.ac-center {
-    //与交叉轴的终点对齐
+    /* 与交叉轴的终点对齐 */
     align-content: center;
   }
   &.ac-end {
-    //与交叉轴的中点对齐
+    /* 与交叉轴的中点对齐 */
     align-content: flex-end;
   }
   &.ac-around {
-    //与交叉轴两端对齐，轴线之间的间隔平均分布
+    /* 与交叉轴两端对齐，轴线之间的间隔平均分布 */
     align-content: space-around;
   }
   &.ac-between {
-    //每根轴线两侧的间隔都相等。所以，轴线之间的间隔比轴线与边框的间隔大一倍
+    /* 每根轴线两侧的间隔都相等。所以，轴线之间的间隔比轴线与边框的间隔大一倍 */
     align-content: space-between;
   }
 }
@@ -272,6 +272,6 @@
   margin-left: 91.667%;
 }
 
-.flex-col-offset-2 {
+.flex-col-offset-12 {
   margin-left: 100%;
 }

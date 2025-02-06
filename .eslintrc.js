@@ -20,5 +20,6 @@ module.exports = {
     '@typescript-eslint/explicit-function-return-type': 'off',
     '@typescript-eslint/explicit-module-boundary-types': 'off',
     '@typescript-eslint/no-explicit-any': 'off',
+    'quote-props': ['error', 'consistent-as-needed'], // 添加这行
   },
 };

@@ -1,3 +1,6 @@
+@import './styles/reset.scss';
+@import './styles/flex.scss';
+
 body {
   margin: 0;
   color: #fff;

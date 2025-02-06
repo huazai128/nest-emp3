@@ -79,14 +79,19 @@ export default defineConfig((store) => {
 
       chain.plugin('TypedCssModulesPlugin').use(
         new TypedCssModulesPlugin({
-          globPattern: 'src/!(styles)/**/*.scss',
+          globPattern: 'src/**/*.scss',
+          camelCase: true,
+          content: '',
+          encoding: 'utf-8',
+          logger: true,
         }),
       );
 
-      // 配置CSS Modules和PostCSS
+      // 修改 CSS 规则配置
       chain.module
         .rule('css')
         .test(/\.(css|scss)$/)
+        .type('javascript/auto')
         .use('style-loader')
         .loader('style-loader')
         .end()
@@ -94,6 +99,10 @@ export default defineConfig((store) => {
         .loader('css-loader')
         .options({
           importLoaders: 2,
+          modules: {
+            auto: true,
+            localIdentName: '[local]_[hash:base64:5]',
+          },
         })
         .end()
         .use('postcss-loader')
@@ -102,16 +111,12 @@ export default defineConfig((store) => {
           postcssOptions: {
             plugins: [
               [
-                'postcss-px-to-viewport',
+                'postcss-pxtorem',
                 {
-                  viewportWidth: 375,
-                  unitPrecision: 3,
-                  viewportUnit: 'rem',
-                  selectorBlackList: [],
-                  propList: ['*'],
-                  fontViewportUnit: 'rem',
+                  rootValue: 37.5,
+                  propList: ['*', '!font-size'],
+                  unitPrecision: 5,
                   minPixelValue: 1,
-                  mediaQuery: true,
                 },
               ],
               'autoprefixer',
@@ -120,7 +125,13 @@ export default defineConfig((store) => {
         })
         .end()
         .use('sass-loader')
-        .loader('sass-loader');
+        .loader('sass-loader')
+        .options({
+          sourceMap: true,
+          sassOptions: {
+            outputStyle: 'compressed',
+          },
+        });
     },
   };
 });
