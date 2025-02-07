@@ -1,5 +1,4 @@
 import { defineConfig } from '@empjs/cli';
-import ReactPlugin from '@empjs/plugin-react';
 import { pluginRspackEmpShare } from '@empjs/share';
 import { join, resolve } from 'path';
 import InlineCodePlugin from 'html-inline-code-plugin';
@@ -9,7 +8,6 @@ export default defineConfig((store) => {
   const env = (process.env.EMP_ENV = store.env || 'dev');
   return {
     plugins: [
-      ReactPlugin(),
       pluginRspackEmpShare({
         empRuntime: {
           runtimeLib: `https://unpkg.com/@empjs/share@3.1.5/output/sdk.js`,
@@ -87,7 +85,7 @@ export default defineConfig((store) => {
         }),
       );
 
-      // 修改 CSS 规则配置
+      // 修改 CSS 规则配置,内置的@empjs/plugin-postcss和@empjs/plugin-lightningcss 都没达到满意的效果
       chain.module
         .rule('css')
         .test(/\.(css|scss)$/)

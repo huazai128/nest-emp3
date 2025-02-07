@@ -1540,6 +1540,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@empjs/plugin-postcss@npm:^3.2.0":
+  version: 3.2.0
+  resolution: "@empjs/plugin-postcss@npm:3.2.0"
+  dependencies:
+    autoprefixer: "npm:^10.4.19"
+    postcss: "npm:^8.4.38"
+    postcss-loader: "npm:^8.1.1"
+    postcss-pxtorem: "npm:^6.1.0"
+  checksum: 10c0/27077ee2a987ab68929fcf3938f97d9f2d7076b1e890a11337a0230e71a38bfc57219b94274a717786af71de9feecd57a955e730a0b6d3e5c1259eb9e6b11ff6
+  languageName: node
+  linkType: hard
+
 "@empjs/plugin-react@npm:^3.2.0":
   version: 3.2.0
   resolution: "@empjs/plugin-react@npm:3.2.0"
@@ -4377,7 +4389,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"autoprefixer@npm:^10.4.20":
+"autoprefixer@npm:^10.4.19, autoprefixer@npm:^10.4.20":
   version: 10.4.20
   resolution: "autoprefixer@npm:10.4.20"
   dependencies:
@@ -9748,6 +9760,7 @@ __metadata:
   resolution: "nest-demo@workspace:."
   dependencies:
     "@empjs/cli": "npm:^3.6.1"
+    "@empjs/plugin-postcss": "npm:^3.2.0"
     "@empjs/plugin-react": "npm:^3.2.0"
     "@empjs/share": "npm:^3.3.2"
     "@nestjs/cli": "npm:^10.0.0"
@@ -10609,7 +10622,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"postcss@npm:>=5.0.2, postcss@npm:^8.2.6, postcss@npm:^8.4.33":
+"postcss@npm:>=5.0.2, postcss@npm:^8.2.6, postcss@npm:^8.4.33, postcss@npm:^8.4.38":
   version: 8.5.1
   resolution: "postcss@npm:8.5.1"
   dependencies:
