@@ -3,8 +3,9 @@ import devConfig from './dev.config';
 
 // 环境变量
 export const environment = process.env.NODE_ENV;
+
 // 运行环境标识
-export const isDevEnv = Object.is(environment, 'dev');
+export const isDevEnv = !environment || Object.is(environment, 'dev');
 export const isProdEnv = Object.is(environment, 'prod');
 export const isTestEnv = Object.is(environment, 'test');
 

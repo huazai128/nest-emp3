@@ -5,7 +5,7 @@ import { InjectModel } from '@app/transformers/model.transform';
 import { createLogger } from '@app/utils/logger';
 import { AUTH } from '@app/configs';
 import { JwtService } from '@nestjs/jwt';
-import { AuthInfo } from '@app/interfaces/auth.interface';
+import { AuthInfo, UserInfo } from '@app/interfaces/auth.interface';
 
 const logger = createLogger({
   scope: 'UserService',
@@ -78,6 +78,17 @@ export class UserService {
     return token;
   }
 
+  public async creatToken(userInfo: UserInfo) {
+    const token = {
+      accessToken: this.jwtService.sign({
+        userId: userInfo.userId,
+        account: userInfo.account,
+      }),
+      expiresIn: AUTH.expiresIn as number,
+    };
+    return token;
+  }
+
   /**
    * 验证用户
    * @param {ValidateUserRequest} { userId }
@@ -95,5 +106,18 @@ export class UserService {
    */
   public async getFindUserId(userId: number) {
     return this.authModel.findOne({ userId }).exec();
+  }
+
+  /**
+   * 通过验证获取用户信息
+   * @param {string} jwt
+   * @return {*}  {Promise<any>}
+   * @memberof AuthService
+   */
+  public async verifyAsync(jwt: string): Promise<any> {
+    const payload = await this.jwtService.verifyAsync(jwt, {
+      secret: AUTH.jwtTokenSecret,
+    });
+    return payload;
   }
 }

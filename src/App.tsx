@@ -8,8 +8,8 @@ const App = () => {
 
   return (
     <div className="content flex-center">
-      <h1>{window.INIT_DATA?.userInfo?.name || '华仔'} 3qqa</h1>
-      <p>Start building wonderful things with EMP1</p>
+      <h1>{window.INIT_DATA?.userInfo?.name || '华仔'} 3</h1>
+      <p>Start building wonderful things with EMP</p>
     </div>
   );
 };

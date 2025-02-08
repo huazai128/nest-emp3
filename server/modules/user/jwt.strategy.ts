@@ -41,7 +41,22 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
    */
   async validate(payload: any) {
     // 验证JWT载荷
-    const res = await this.userService.validateUser(payload.data); // 调用用户服务验证用户
-    return res; // 返回验证结果
+    if (!payload || !payload.userId) {
+      logger.error('无效的JWT载荷');
+      return null;
+    }
+
+    try {
+      // 调用用户服务验证用户
+      const user = await this.userService.validateUser(Number(payload.userId));
+      if (!user) {
+        logger.error('用户不存在');
+        return null;
+      }
+      return user;
+    } catch (error) {
+      logger.error('验证用户失败:', error);
+      return null;
+    }
   }
 }

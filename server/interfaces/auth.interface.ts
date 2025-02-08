@@ -5,7 +5,7 @@ export interface TokenInfo {
 
 export interface UserInfo {
   userId: number;
-  openid: string;
+  openid?: string;
   nickname?: string;
   avatar?: string;
   role?: number[];
