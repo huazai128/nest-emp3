@@ -19,8 +19,10 @@ export default defineConfig((store) => {
 
     // 仅在非开发环境或指定了特定入口时扫描所有页面
     if (env !== 'dev' || process.env.ENTRY) {
-      // 使用glob匹配pages目录下所有的index.tsx文件
-      const files = glob.sync('./src/pages/**/index.tsx');
+      // 使用glob匹配pages目录下所有的index.tsx文件，但排除所有二级pages目录
+      const files = glob.sync('./src/pages/**/index.tsx', {
+        ignore: ['./src/pages/**/pages/**'],
+      });
 
       files.forEach((file) => {
         const entryKey = file.replace('./src/', '');

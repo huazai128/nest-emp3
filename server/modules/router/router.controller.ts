@@ -41,6 +41,48 @@ export class RouterController {
     return { msg: '1212' };
   }
 
+  @Get('site')
+  @Header('content-type', 'text/html')
+  @Render('pages/site')
+  async site(@Req() req: Request) {
+    const accessUrl = req.protocol + '://' + req.get('host') + req.originalUrl;
+    logger.log('访问的连接:', accessUrl);
+    // 获取公共数据
+    const wechatLoginUrl =
+      await this.routeService.generateWechatLoginUrl(accessUrl);
+    const commonData = this.routeService.getCommonData(req);
+    logger.log('通用数据', commonData);
+
+    return {
+      data: {
+        ...commonData,
+        path: req.url, // 当前访问路径
+        wechatLoginUrl,
+      },
+    };
+  }
+
+  @Get('share/*')
+  @Header('content-type', 'text/html')
+  @Render('pages/share')
+  async share(@Req() req: Request) {
+    const accessUrl = req.protocol + '://' + req.get('host') + req.originalUrl;
+    logger.log('访问的连接:', accessUrl);
+    // 获取公共数据
+    const wechatLoginUrl =
+      await this.routeService.generateWechatLoginUrl(accessUrl);
+    const commonData = this.routeService.getCommonData(req);
+    logger.log('通用数据', commonData);
+
+    return {
+      data: {
+        ...commonData,
+        path: req.url, // 当前访问路径
+        wechatLoginUrl,
+      },
+    };
+  }
+
   @Get('activity')
   @Header('content-type', 'text/html')
   @Render('pages/activity')

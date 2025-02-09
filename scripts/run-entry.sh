@@ -4,8 +4,8 @@
 echo "可用的入口列表："
 echo "0) index (主页)"
 
-# 使用 find 命令查找所有 index.tsx 文件并生成列表
-entries=($(find ./src/pages -name "index.tsx"))
+# 使用 find 命令查找 src/pages 直接子目录下的 index.tsx 文件
+entries=($(find ./src/pages -maxdepth 2 -mindepth 2 -name "index.tsx"))
 for i in "${!entries[@]}"; do
     # 将完整路径转换为相对路径显示
     entry_path=${entries[$i]}
