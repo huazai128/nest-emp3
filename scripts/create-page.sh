@@ -49,60 +49,6 @@ fi
 echo "正在创建新页面..."
 cp -r "$TEMPLATE_DIR/$selected_template" "$PAGES_DIR/$new_page_name"
 
-# 添加路由处理器到 router.controller.ts
-ROUTER_CONTROLLER="./server/modules/router/router.controller.ts"
-if [ -f "$ROUTER_CONTROLLER" ]; then
-    echo "正在更新路由控制器..."
-    
-    # 根据模板设置路由路径
-    if [ "$selected_template" = "template1" ]; then
-        ROUTE_PATH="${new_page_name}/*"
-    elif [ "$selected_template" = "template2" ]; then
-        ROUTE_PATH="${new_page_name}"
-    else
-        ROUTE_PATH="${new_page_name}/*"  # 默认使用带通配符的路径
-    fi
-    
-    # 在最后一个方法之前插入新的路由处理方法
-    NEW_ROUTE=$(cat << EOF
-
-  @Get('${ROUTE_PATH}')
-  @Header('content-type', 'text/html')
-  @Render('pages/${new_page_name}')
-  async ${new_page_name}(@Req() req: Request) {
-    const accessUrl = req.protocol + '://' + req.get('host') + req.originalUrl;
-    logger.log('访问的连接:', accessUrl);
-    // 获取公共数据
-    const wechatLoginUrl =
-      await this.routeService.generateWechatLoginUrl(accessUrl);
-    const commonData = this.routeService.getCommonData(req);
-    logger.log('通用数据', commonData);
-
-    return {
-      data: {
-        ...commonData,
-        path: req.url, // 当前访问路径
-        wechatLoginUrl,
-      },
-    };
-  }
-EOF
-)
-    
-    # 使用更精确的匹配模式（匹配 @Get('*') 装饰器）
-    if [[ "$OSTYPE" == "darwin"* ]]; then
-        # macOS 需要空备份文件
-        sed -i '' $'s|@Get(\'\\*\').*@Render(\'index\')|'"${NEW_ROUTE}"$'\\\n&|' "$ROUTER_CONTROLLER"
-    else
-        # Linux
-        sed -i $'s|@Get(\'\\*\').*@Render(\'index\')|'"${NEW_ROUTE}"$'\\\n&|' "$ROUTER_CONTROLLER"
-    fi
-    
-    echo "✅ 路由控制器更新成功！"
-else
-    echo "⚠️ 警告: 未找到路由控制器文件 $ROUTER_CONTROLLER"
-fi
-
 # 替换文件内容中的模板名称
 find "$PAGES_DIR/$new_page_name" -type f \( -name "*.tsx" -o -name "*.ts" \) -not -path "*/node_modules/*" | while read file; do
     # 将模板名替换为新页面名称（驼峰式）
