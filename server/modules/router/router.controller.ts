@@ -1,15 +1,7 @@
-import {
-  Controller,
-  Get,
-  Render,
-  Header,
-  Req,
-  UseGuards,
-} from '@nestjs/common';
+import { Controller, Get, Render, Header, Req } from '@nestjs/common';
 import { Request } from 'express';
 import { RouterSercive } from './router.service';
 import { createLogger } from '@app/utils/logger';
-import { RouterGuard } from '@app/guards/router.guard';
 
 const logger = createLogger({
   scope: 'RouterController',
@@ -49,13 +41,33 @@ export class RouterController {
     return { msg: '1212' };
   }
 
+  @Get('activity')
+  @Header('content-type', 'text/html')
+  @Render('pages/activity')
+  async activity(@Req() req: Request) {
+    const accessUrl = req.protocol + '://' + req.get('host') + req.originalUrl;
+    logger.log('访问的连接:', accessUrl);
+    // 获取公共数据
+    const wechatLoginUrl =
+      await this.routeService.generateWechatLoginUrl(accessUrl);
+    const commonData = this.routeService.getCommonData(req);
+    logger.log('通用数据', commonData);
+
+    return {
+      data: {
+        ...commonData,
+        path: req.url, // 当前访问路径
+        wechatLoginUrl,
+      },
+    };
+  }
+
   /**
    * 通用页面路由
    * 渲染页面模板
    * @param {Request} req - 请求对象
    * @returns {Object} 返回渲染数据
    */
-  @UseGuards(RouterGuard) // 使用路由守卫
   @Get('*')
   @Header('content-type', 'text/html')
   @Render('index')

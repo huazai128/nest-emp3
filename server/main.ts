@@ -24,8 +24,8 @@ async function bootstrap() {
     extensions: ['js', 'css', 'png', 'jpg', 'jpeg', 'gif', 'svg', 'ico'],
   });
 
-  // 设置视图目录和引擎
-  app.setBaseViewsDir(join(__dirname, '../client'));
+  // 修改视图配置
+  app.setBaseViewsDir(join(__dirname, '../client')); // 修改为client根目录
   app.setViewEngine('html');
   app.engine('html', ejs.renderFile);
 

@@ -22,7 +22,8 @@
     "emp:build": "emp build",
     "emp:start": "emp serve",
     "stat": "emp build --analyze",
-    "emp": "emp"
+    "emp": "emp",
+    "run-entry": "bash ./scripts/run-entry.sh"
   },
   "dependencies": {
     "@empjs/share": "^3.3.2",

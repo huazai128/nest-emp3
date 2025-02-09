@@ -18,13 +18,12 @@ body {
 }
 
 .content h1 {
-  font-size: 16px; /* 16px */
+  font-size: 16px;
   font-weight: 700;
-  width: 100px;
 }
 
 .content p {
-  font-size: 12px; /* 12px */
+  font-size: 12px;
   font-weight: 400;
   opacity: 0.5;
 }

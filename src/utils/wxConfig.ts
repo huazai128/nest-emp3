@@ -62,7 +62,7 @@ export async function getWxConfig(): Promise<void> {
 
     const { appId, timestamp, nonceStr, signature } = result;
 
-    window.wx.config({
+    window?.wx?.config({
       debug: false, // 关闭调试模式
       appId, // 公众号的唯一标识
       timestamp, // 生成签名的时间戳
