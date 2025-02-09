@@ -10,4 +10,8 @@ export interface ConfigServer {
     appId: string;
     appSecret: string;
   };
+  apiPrefix: {
+    baseApi: string;
+    transferApi: string;
+  };
 }

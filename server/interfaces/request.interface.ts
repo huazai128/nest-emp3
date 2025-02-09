@@ -1,5 +1,6 @@
 import { Request } from 'express';
 import { UserInfo } from './auth.interface';
+import { ConfigServer } from './config.interface';
 declare module 'express-session' {
   interface SessionData {
     user?: UserInfo;
@@ -19,4 +20,10 @@ export interface AuthenticatedRequest extends Request {
 
 export interface UnauthenticatedRequest extends Request {
   user?: UserInfo;
+}
+
+export interface HttpRequest {
+  transformUrl: string;
+  transferData: Record<string, any>;
+  apiTransferType?: ConfigServer['apiPrefix'];
 }

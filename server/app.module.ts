@@ -13,6 +13,7 @@ import { DatabaseModule } from '@app/processors/database/database.module';
 import modules from '@app/modules';
 import { LocalMiddleware } from '@app/middlewares/local.middleware';
 import { AppMiddleware } from '@app/middlewares/app.middleware';
+import { AxiosModule } from '@app/processors/axios/axios.module';
 
 /**
  * 应用程序主模块
@@ -24,6 +25,7 @@ import { AppMiddleware } from '@app/middlewares/app.middleware';
     // Redis核心模块,用于处理缓存
     RedisCoreModule.forRoot(CONFIG.redis),
     DatabaseModule,
+    AxiosModule,
     ...modules,
   ],
   controllers: [],

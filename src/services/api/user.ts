@@ -11,7 +11,7 @@ import type { HttpParams } from '@src/services/http';
  * @returns Promise<ResponseData<T>> 返回登录响应结果
  */
 function login<T>(data: HttpParams): Promise<ResponseData<T>> {
-  return http.post<T>('api/user/login', data);
+  return http.post<T>(data);
 }
 
 // 导出用户相关接口

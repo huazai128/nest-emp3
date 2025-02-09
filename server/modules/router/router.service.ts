@@ -35,11 +35,12 @@ export class RouterSercive {
 
     const data: CommonData = {
       userInfo: {
-        name: user?.nickname,
+        name: user?.nickname || user?.account,
         userId: user?.userId?.toString(),
       },
       openId: wechatConfig.appId,
     };
+    logger.log('公共数据', data);
     if (isDevEnv) {
       data.apiHost = `http://${getServerIp()}:${APP.PORT}`;
     }

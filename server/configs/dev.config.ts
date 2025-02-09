@@ -22,6 +22,10 @@ const config: ConfigServer = {
     // },
   },
   wechat: wechatConfig,
+  apiPrefix: {
+    baseApi: 'http://localhost:3000',
+    transferApi: '/api',
+  },
 };
 
 export default config;

@@ -20,7 +20,12 @@ const isNotEmpty = (value: any) => value !== null && value !== undefined;
 /**
  * HTTP请求参数类型
  */
-export type HttpParams = Record<string, any>;
+export type HttpParams = {
+  transformUrl: string; // 转发接口
+  data: object | FormData; // 转发参数
+  apiUrl?: string; // node 层接口
+  apiTransferType?: string; // 对应其他域名，默认不添为baseApi
+};
 
 /**
  * GET请求参数类型
@@ -42,9 +47,8 @@ enum HTTPERROR {
  * HTTP请求配置接口
  */
 interface HttpReq {
-  data?: HttpParams; // 请求数据
+  data: HttpParams; // 请求数据
   otherConfig?: AxiosRequestConfig; // 其他配置
-  apiUrl: string; // 接口地址
 }
 
 /**
@@ -65,11 +69,11 @@ const resFormat = (res: any) => res;
  */
 function httpCommon<T>(
   method: Method,
-  { data, otherConfig, apiUrl }: HttpReq,
+  { data: { apiUrl, ...data }, otherConfig }: HttpReq,
 ): Promise<ResponseData<T> | any> {
   let axiosConfig: AxiosRequestConfig = {
     method,
-    url: apiUrl,
+    url: apiUrl || 'api/transform',
     baseURL: apiHost,
   };
   const instance = axios.create();
@@ -114,13 +118,13 @@ function httpCommon<T>(
   );
 
   // 过滤空值
-  data = pickBy({ ...data }, isNotEmpty);
+  const params = pickBy({ ...data }, isNotEmpty);
 
   // 根据请求方法设置参数
   if (method === 'get') {
-    axiosConfig.params = data;
+    axiosConfig.params = params;
   } else {
-    axiosConfig.data = data;
+    axiosConfig.data = params;
   }
 
   // 记录请求开始时间
@@ -144,12 +148,8 @@ function httpCommon<T>(
  * @param otherConfig 其他配置
  * @returns Promise
  */
-function get<T>(
-  apiUrl: string,
-  data: HttpParams,
-  otherConfig: AxiosRequestConfig = {},
-) {
-  return httpCommon<T>('get', { data, apiUrl, otherConfig });
+function get<T>(data: HttpParams, otherConfig: AxiosRequestConfig = {}) {
+  return httpCommon<T>('get', { data, otherConfig });
 }
 
 /**
@@ -159,12 +159,8 @@ function get<T>(
  * @param otherConfig 其他配置
  * @returns Promise
  */
-function post<T>(
-  apiUrl: string,
-  data: HttpParams,
-  otherConfig: AxiosRequestConfig = {},
-) {
-  return httpCommon<T>('post', { data, apiUrl, otherConfig });
+function post<T>(data: HttpParams, otherConfig: AxiosRequestConfig = {}) {
+  return httpCommon<T>('post', { data, otherConfig });
 }
 
 /**
@@ -174,12 +170,8 @@ function post<T>(
  * @param otherConfig 其他配置
  * @returns Promise
  */
-function deleteId<T>(
-  apiUrl: string,
-  data: HttpParams,
-  otherConfig: AxiosRequestConfig = {},
-) {
-  return httpCommon<T>('delete', { data, apiUrl, otherConfig });
+function deleteId<T>(data: HttpParams, otherConfig: AxiosRequestConfig = {}) {
+  return httpCommon<T>('delete', { data, otherConfig });
 }
 
 /**
@@ -194,7 +186,7 @@ function put<T>(
   data: HttpParams,
   otherConfig: AxiosRequestConfig = {},
 ) {
-  return httpCommon<T>('put', { data, apiUrl, otherConfig });
+  return httpCommon<T>('put', { data, otherConfig });
 }
 
 export default {

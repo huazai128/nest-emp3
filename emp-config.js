@@ -48,6 +48,9 @@ export default defineConfig((store) => {
       template: resolve(__dirname, './views/index.html'),
       filename: resolve(__dirname, './dist/views/index.html'),
       title: '基础架构框架',
+      meta: {
+        viewport: 'width=device-width, initial-scale=1.0',
+      },
     },
     chain(chain) {
       if (env !== 'dev' && !!env) {
