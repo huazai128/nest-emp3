@@ -229,7 +229,3 @@ yarn start:prod
 2. 创建特性分支
 3. 提交代码
 4. 创建 Pull Request
-
-## License
-
-[MIT](LICENSE)
