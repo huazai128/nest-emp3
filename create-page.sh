@@ -27,7 +27,7 @@ selected_template=${templates[$((template_choice-1))]}
 
 # 提示用户输入新页面名称
 echo ""
-echo "请输入新页面名称 (例如: share):"
+echo "请输入新页面名称 (例如: user-list):"
 read new_page_name
 
 # 验证新页面名称
@@ -49,20 +49,11 @@ fi
 echo "正在创建新页面..."
 cp -r "$TEMPLATE_DIR/$selected_template" "$PAGES_DIR/$new_page_name"
 
-# 替换文件内容中的模板名称
-find "$PAGES_DIR/$new_page_name" -type f \( -name "*.tsx" -o -name "*.ts" \) -not -path "*/node_modules/*" | while read file; do
+# 替换文件内容中的模板名称（如果需要）
+find "$PAGES_DIR/$new_page_name" -type f -name "*.tsx" -o -name "*.ts" -o -name "*.scss" | while read file; do
     # 将模板名替换为新页面名称（驼峰式）
     camel_case_name=$(echo "$new_page_name" | sed -E 's/-([a-z])/\U\1/g' | sed -E 's/^([a-z])/\U\1/')
     sed -i '' "s/$selected_template/$camel_case_name/g" "$file" 2>/dev/null || sed -i "s/$selected_template/$camel_case_name/g" "$file"
-    
-    # 如果是index.tsx文件，替换路由路径
-    if [[ "$file" == *"/index.tsx" ]]; then
-        # 替换根路径 path: '/'
-        sed -i '' "s|path: '/'|path: '${new_page_name}/'|g" "$file" 2>/dev/null || sed -i "s|path: '/'|path: '${new_page_name}/'|g" "$file"
-        
-        # 替换其他路径 path: '/xxx'，保持后面的路径不变
-        sed -i '' "s|path: '/\([^']*\)'|path: '${new_page_name}/\1'|g" "$file" 2>/dev/null || sed -i "s|path: '/\([^']*\)'|path: '${new_page_name}/\1'|g" "$file"
-    fi
 done
 
 echo "✅ 页面创建成功！"

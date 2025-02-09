@@ -5,7 +5,7 @@ import RouterComp from '@src/components/RouterComp';
 const root = ReactDOM.createRoot(document.getElementById('emp-root')!);
 const routes = [
   {
-    path: '/',
+    path: '/home',
     element: lazy(() => import('./pages/Home')),
   },
   {
