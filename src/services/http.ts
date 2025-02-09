@@ -21,8 +21,8 @@ const isNotEmpty = (value: any) => value !== null && value !== undefined;
  * HTTP请求参数类型
  */
 export type HttpParams = {
-  transformUrl: string; // 转发接口
-  data: object | FormData; // 转发参数
+  transformUrl?: string; // 转发接口
+  data?: object | FormData; // 转发参数
   apiUrl?: string; // node 层接口
   apiTransferType?: string; // 对应其他域名，默认不添为baseApi
 };
@@ -92,6 +92,7 @@ function httpCommon<T>(
   instance.interceptors.response.use(
     (response) => {
       const rdata = response.data;
+      console.log('response', response);
       if (!isSuccess(rdata)) {
         return Promise.reject(rdata);
       }
@@ -143,7 +144,6 @@ function httpCommon<T>(
 
 /**
  * GET请求
- * @param apiUrl 接口地址
  * @param data 请求数据
  * @param otherConfig 其他配置
  * @returns Promise
@@ -154,7 +154,6 @@ function get<T>(data: HttpParams, otherConfig: AxiosRequestConfig = {}) {
 
 /**
  * POST请求
- * @param apiUrl 接口地址
  * @param data 请求数据
  * @param otherConfig 其他配置
  * @returns Promise

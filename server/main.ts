@@ -11,6 +11,8 @@ import morgan from 'morgan';
 import { get } from 'lodash';
 import { Request } from 'express';
 import * as ejs from 'ejs';
+import { TransformInterceptor } from '@app/interceptors/transform.interceptor';
+import { LoggingInterceptor } from '@app/interceptors/logging.interceptor';
 
 async function bootstrap() {
   // 创建 NestJS 应用实例
@@ -55,6 +57,11 @@ async function bootstrap() {
     morgan(
       ':method :url :status :userId :requestParameters :requestBody - :response-time ms',
     ),
+  );
+
+  app.useGlobalInterceptors(
+    new TransformInterceptor(),
+    new LoggingInterceptor(),
   );
 
   // 启动应用
