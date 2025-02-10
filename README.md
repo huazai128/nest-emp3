@@ -2,7 +2,7 @@
 
 这是一个基于 Nest.js 和 EMP (Extensible Micro Frontend Platform) 构建的多页面应用框架, 内置微信授权登录、数据库、缓存、日志、APP端内嵌授权访问等能力。
 
-![image](https://github.com/huazai128/nest-emp3/blob/main/image.png)
+![image](https://github.com/huazai128/nest-emp3/blob/master/image.png)
 
 ## 项目架构
 
