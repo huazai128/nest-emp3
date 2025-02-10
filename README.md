@@ -6,7 +6,7 @@
 
 ### 前端架构
 
-- 基于 EMP 的多页面应用架构
+- 基于 EMP 微前端架构实现多页面应用
 - React 18 + TypeScript
 - 路由使用 React Router
 - 状态管理使用 Zustand
