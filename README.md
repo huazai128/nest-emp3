@@ -2,6 +2,8 @@
 
 这是一个基于 Nest.js 和 EMP (Extensible Micro Frontend Platform) 构建的多页面应用框架。
 
+![image](https://github.com/huazai128/nest-emp3/image.png)
+
 ## 项目架构
 
 ### 前端架构
