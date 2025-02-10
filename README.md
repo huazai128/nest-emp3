@@ -1,4 +1,4 @@
-# Nest-EMP 多页面应用
+# Nest-EMP 多页面应用，基于EMP的微前端架构，内置微信授权登录、数据库、缓存、日志、APP端内嵌授权访问等能力
 
 这是一个基于 Nest.js 和 EMP (Extensible Micro Frontend Platform) 构建的多页面应用框架。
 
