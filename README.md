@@ -27,15 +27,11 @@
 ├── src/ # 前端源码
 │ ├── pages/ # 页面目录
 │ ├── components/ # 公共组件
-│ │ ├── common/ # 通用组件
-│ │ └── business/ # 业务组件
 │ ├── hooks/ # 自定义 Hooks
-│ ├── stores/ # 状态管理
 │ ├── styles/ # 全局样式
-│ │ ├── variables/ # 样式变量
-│ │ └── mixins/ # 样式混入
-│ ├── apis/ # API 接口
-│ ├── types/ # TypeScript 类型定义
+│ │ ├── flex/ # 弹性布局
+│ │ └── reset/ # 样式重置
+│ ├── services/ # 服务层
 │ └── utils/ # 工具函数
 ├── server/ # 后端源码
 │ ├── modules/ # 业务模块
@@ -47,11 +43,11 @@
 │ ├── config/ # 配置文件
 │ └── utils/ # 工具函数
 ├── templates/ # 页面模板
-│ ├── basic/ # 基础模板
-│ └── business/ # 业务模板
+│ ├── single/ # 单页面模板
+│ └── multi/ # 多页面模板
 ├── scripts/ # 脚本工具
-│ ├── build/ # 构建脚本
-│ └── deploy/ # 部署脚本
+│ ├── create-page.sh # 创建页面脚本
+│ └── run-entry.sh # 运行页面脚本
 ├── public/ # 静态资源
 └── dist/ # 构建输出
 ```
