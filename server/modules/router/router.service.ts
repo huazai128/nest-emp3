@@ -23,7 +23,7 @@ interface CommonData {
  * @class RouterSercive
  */
 @Injectable()
-export class RouterSercive {
+export class RouterService {
   constructor(private readonly wechatAuthService: WechatAuthService) {}
   /**
    * 获取公共数据
