@@ -8,6 +8,12 @@ declare global {
         name: string;
         userId: string;
       };
+      isWx: boolean;
+      isApp: boolean;
+      isDev: boolean;
+      isProd: boolean;
+      isIOS: boolean;
+      isAndroid: boolean;
     };
     wxConfig?: {
       appId: string;

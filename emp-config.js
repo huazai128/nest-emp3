@@ -1,11 +1,9 @@
 import { defineConfig } from '@empjs/cli';
-import { pluginRspackEmpShare } from '@empjs/share';
 import { join, resolve } from 'path';
 import InlineCodePlugin from 'html-inline-code-plugin';
 import { TypedCssModulesPlugin } from 'typed-css-modules-webpack-plugin';
 import { glob } from 'glob';
-import pluginReact from '@empjs/plugin-react'
-
+import pluginReact from '@empjs/plugin-react';
 
 export default defineConfig((store) => {
   const env = (process.env.EMP_ENV = store.env || 'dev');
@@ -43,9 +41,7 @@ export default defineConfig((store) => {
 
   return {
     entries: getEntries(),
-    plugins: [
-      pluginReact()
-    ],
+    plugins: [pluginReact()],
     base: '/',
     resolve: {
       alias: {
@@ -135,47 +131,20 @@ export default defineConfig((store) => {
       chain.module
         .rule('css')
         .test(/\.(css|scss)$/)
-        .type('javascript/auto')
         .use('style-loader')
         .loader('style-loader')
         .end()
         .use('css-loader')
         .loader('css-loader')
         .options({
-          importLoaders: 2,
           modules: {
             auto: true,
             localIdentName: '[local]_[hash:base64:5]',
           },
         })
         .end()
-        .use('postcss-loader')
-        .loader('postcss-loader')
-        .options({
-          postcssOptions: {
-            plugins: [
-              [
-                'postcss-pxtorem',
-                {
-                  rootValue: 37.5,
-                  propList: ['*', '!font-size'],
-                  unitPrecision: 5,
-                  minPixelValue: 1,
-                },
-              ],
-              'autoprefixer',
-            ],
-          },
-        })
-        .end()
         .use('sass-loader')
-        .loader('sass-loader')
-        .options({
-          sourceMap: true,
-          sassOptions: {
-            outputStyle: 'compressed',
-          },
-        });
+        .loader('sass-loader');
     },
   };
 });

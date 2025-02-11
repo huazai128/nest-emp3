@@ -1,3 +1,4 @@
+import { isDevEnv, isProdEnv } from '@app/configs';
 import { Request } from 'express';
 
 /**
@@ -14,5 +15,5 @@ export function detectUserAgent(req: Request) {
     req.headers['user-agent']?.includes('iPad') ||
     false;
   const isAndroid = req.headers['user-agent']?.includes('Android') || false;
-  return { isWx, isApp, isIOS, isAndroid };
+  return { isWx, isApp, isIOS, isAndroid, isDev: isDevEnv, isProd: isProdEnv };
 }

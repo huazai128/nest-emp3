@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import * as Styles from './style.scss';
+import Styles from './style.scss';
 import classNames from 'classnames';
 import { getWxConfig } from '@src/utils/wxConfig';
 
