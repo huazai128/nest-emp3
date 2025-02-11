@@ -4,6 +4,8 @@ import { join, resolve } from 'path';
 import InlineCodePlugin from 'html-inline-code-plugin';
 import { TypedCssModulesPlugin } from 'typed-css-modules-webpack-plugin';
 import { glob } from 'glob';
+import pluginReact from '@empjs/plugin-react'
+
 
 export default defineConfig((store) => {
   const env = (process.env.EMP_ENV = store.env || 'dev');
@@ -42,14 +44,7 @@ export default defineConfig((store) => {
   return {
     entries: getEntries(),
     plugins: [
-      pluginRspackEmpShare({
-        empRuntime: {
-          runtimeLib: `https://unpkg.com/@empjs/share@3.1.5/output/sdk.js`,
-          frameworkLib: `https://unpkg.com/@empjs/libs-18@0.0.1/dist`,
-          frameworkGlobal: 'EMP_ADAPTER_REACT',
-          framework: 'react',
-        },
-      }),
+      pluginReact()
     ],
     base: '/',
     resolve: {

@@ -57,7 +57,7 @@
     "zustand": "^5.0.3"
   },
   "devDependencies": {
-    "@empjs/cli": "^3.6.1",
+    "@empjs/cli": "^3.4.1",
     "@empjs/plugin-react": "^3.2.0",
     "@nestjs/cli": "^10.0.0",
     "@nestjs/schematics": "^10.0.0",
