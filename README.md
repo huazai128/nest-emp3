@@ -18,7 +18,7 @@
 ### 后端架构
 
 - 基于 Nest.js 的 Node.js 服务
-- MongoDB 数据库 + Mongoose ODM
+- MongoDB 数据库 
 - Redis 缓存
 - JWT 认证
 - 微信授权登录
