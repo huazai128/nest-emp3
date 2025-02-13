@@ -48,11 +48,16 @@ const WX_JS_API_LIST = [
   'openCard',
 ] as const;
 
+export type WxApiList = typeof WX_JS_API_LIST;
+
 /**
  * 获取微信JS-SDK配置并初始化
+ * @param jsApiList 需要使用的JS接口列表，默认使用WX_JS_API_LIST
  * @returns Promise<void>
  */
-export async function getWxConfig(): Promise<void> {
+export async function getWxConfig(
+  jsApiList: WxApiList = WX_JS_API_LIST,
+): Promise<void> {
   try {
     const { result } = await api.wxConfig.getWxConfig<WxConfigResponse>();
 
@@ -68,7 +73,7 @@ export async function getWxConfig(): Promise<void> {
       timestamp, // 生成签名的时间戳
       nonceStr, // 生成签名的随机串
       signature, // 签名
-      jsApiList: WX_JS_API_LIST, // 需要使用的JS接口列表
+      jsApiList, // 需要使用的JS接口列表
     });
   } catch (error) {
     console.error('微信JS-SDK配置失败:', error);
