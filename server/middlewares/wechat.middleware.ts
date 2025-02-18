@@ -7,6 +7,7 @@ import { CacheService } from '@app/processors/redis/cache.service';
 import { createLogger } from '@app/utils/logger';
 import { WechatAuthService } from '@app/modules/wechatAuth/wechat-auth.service';
 import { WECHAT_SILENT_AUTH_ROUTES } from '@app/constants/route-domain.constant';
+
 // 创建一个日志记录器实例，用于记录日志信息
 const logger = createLogger({
   scope: 'WechatAuthMiddleware',
@@ -16,14 +17,23 @@ const logger = createLogger({
 /**
  * 微信授权中间件
  * 用于处理微信网页授权流程
+ * 主要功能:
+ * 1. 检查用户是否已登录
+ * 2. 处理微信授权流程
+ * 3. 获取用户信息并保存到session
  */
 @Injectable()
 export class WechatAuthMiddleware implements NestMiddleware {
   constructor(
-    private readonly cacheService: CacheService,
-    private readonly wechatAuthService: WechatAuthService,
+    private readonly cacheService: CacheService, // 缓存服务,用于存储授权信息
+    private readonly wechatAuthService: WechatAuthService, // 微信授权服务
   ) {}
 
+  /**
+   * 根据请求URL获取匹配的域名
+   * @param originalUrl 原始请求URL
+   * @returns 匹配的域名
+   */
   private getMatchedDomain(originalUrl: string): string {
     logger.log('获取匹配的授权域名');
     for (const [route, domain] of ROUTE_DOMAIN_MAP.entries()) {
@@ -36,6 +46,12 @@ export class WechatAuthMiddleware implements NestMiddleware {
     return '';
   }
 
+  /**
+   * 构建授权URL
+   * @param req 请求对象
+   * @param matchedDomain 匹配的域名
+   * @returns 构建好的授权URL
+   */
   private buildAuthUrl(req: Request, matchedDomain: string): string {
     logger.log('开始构建授权URL');
     const currentUrl = `${req.protocol}://${req.get('host')}${req.originalUrl}`;
@@ -59,6 +75,11 @@ export class WechatAuthMiddleware implements NestMiddleware {
     return redirectUrl;
   }
 
+  /**
+   * 处理重定向URL
+   * @param redirectUrl 重定向URL
+   * @returns 处理后的URL
+   */
   private handleRedirect(redirectUrl: string): string {
     logger.log('处理微信授权重定向');
     const url = fillParams(
@@ -72,17 +93,26 @@ export class WechatAuthMiddleware implements NestMiddleware {
     return url;
   }
 
+  /**
+   * 中间件主处理函数
+   * @param req 请求对象
+   * @param res 响应对象
+   * @param next 下一个中间件
+   */
   async use(req: Request, res: Response, next: NextFunction) {
+    // 检查用户是否已登录
     const user = req.session.user;
     logger.info('user 用户信息', user);
     if (user?.userId) {
       logger.log('用户已存在，直接通过授权');
       return next();
     }
+
     try {
       const { appId } = wechatConfig;
       logger.log('处理请求URL:', req.originalUrl);
 
+      // 检查是否为微信环境
       if (!isWechat(req)) {
         logger.log('非微信环境，直接通过');
         return next();
@@ -92,15 +122,18 @@ export class WechatAuthMiddleware implements NestMiddleware {
       const code = req.query.code as string;
       const authorized = req.query.authorized as string;
 
+      // 如果已授权，直接通过
       if (authorized === 'true') {
         logger.log('已授权，直接通过');
         return next();
       }
 
+      // 无授权码，开始授权流程
       if (!code) {
         logger.log('无授权码，开始授权流程');
         const matchedDomain = this.getMatchedDomain(req.originalUrl);
         const authUrl = this.buildAuthUrl(req, matchedDomain);
+        // 根据路由决定使用静默授权还是用户授权
         const scope = WECHAT_SILENT_AUTH_ROUTES.includes(req.path)
           ? 'snsapi_base'
           : 'snsapi_userinfo';
@@ -110,12 +143,13 @@ export class WechatAuthMiddleware implements NestMiddleware {
         return res.redirect(redirectUrl);
       }
 
+      // 处理授权回调
       logger.log('处理授权回调');
       const redirectUrl = req.query.redirectUrl as string;
       const { user: userInfo, token } =
         await this.wechatAuthService.getAccessToken(code);
 
-      // 立即获取用户信息，确保 session 已经设置
+      // 设置用户信息和token
       logger.info('重定向前获取用户信息', req.session.user);
       res.cookie('jwt', token.accessToken, {
         sameSite: true,
@@ -126,7 +160,7 @@ export class WechatAuthMiddleware implements NestMiddleware {
       await req.session.save(); // 确保 session 更新
       logger.info(userInfo, '获取用户信息成功===');
 
-      // 处理重定向后，强制刷新页面以确保获取到用户信息
+      // 处理重定向
       if (redirectUrl) {
         const decodedRedirectUrl = decodeURIComponent(redirectUrl);
         logger.log(`重定向URL存在，处理授权回调: ${decodedRedirectUrl}`);
