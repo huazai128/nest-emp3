@@ -4,9 +4,10 @@ import InlineCodePlugin from 'html-inline-code-plugin';
 import { TypedCssModulesPlugin } from 'typed-css-modules-webpack-plugin';
 import { glob } from 'glob';
 import pluginReact from '@empjs/plugin-react';
+import { UploadSourceMapPlugin } from './build/sourcemap-upload-plugin';
 
-export default defineConfig((store) => {
-  const env = (process.env.EMP_ENV = store.env || 'dev');
+export default defineConfig(() => {
+  const env = process.env.NODE_ENV;
 
   // 自动扫描pages目录下的入口文件
   const getEntries = () => {
@@ -18,7 +19,7 @@ export default defineConfig((store) => {
     };
 
     // 仅在非开发环境或指定了特定入口时扫描所有页面
-    if (env !== 'dev' || process.env.ENTRY) {
+    if (env !== 'development' || !env || process.env.ENTRY) {
       // 使用glob匹配pages目录下所有的index.tsx文件，但排除所有二级pages目录
       const files = glob.sync('./src/pages/**/index.tsx', {
         ignore: ['./src/pages/**/pages/**'],
@@ -68,6 +69,7 @@ export default defineConfig((store) => {
       output: {
         filename: 'js/[name].[contenthash].js',
         chunkFilename: 'js/[name].[contenthash].chunk.js',
+        sourcemapFilename: 'js/[name].[contenthash].map',
       },
       polyfill: {
         entryCdn: `https://unpkg.com/@empjs/polyfill@0.0.1/dist/es.js`,
@@ -92,20 +94,36 @@ export default defineConfig((store) => {
       chunks: 'all',
     },
     chain(chain) {
-      if (env !== 'dev' && !!env) {
+      const isProd = env !== 'development' && !!env;
+      if (isProd) {
         chain.devtool('source-map');
-        chain.plugin('SourcemapUploadPlugin').use(
-          new UploadSourceMapPlugin({
-            url: `http:localhost:5005/api/upload-zip`,
-            uploadPath: resolve(__dirname, './dist/client/js'),
-            patterns: [/\js.map$/],
-            requestOption: {
-              data: {
-                siteId: '63b6568f66704eb3458306d6',
-              },
+        // 优化 sourcemap 上传配置
+        const sourcemapConfig = {
+          url:
+            process.env.SOURCEMAP_UPLOAD_URL ||
+            'http://localhost:5005/api/upload-zip',
+          uploadPath: resolve(__dirname, './dist/client/js'),
+          patterns: [/\.js\.map$/],
+          requestOption: {
+            timeout: 30000, // 设置30秒超时
+            retries: 3, // 失败重试3次
+            data: {
+              siteId: process.env.SITE_ID || '63b6568f66704eb3458306d6',
+              env: env,
+              version: process.env.VERSION || '1.0.0',
             },
-          }),
-        );
+          },
+          onSuccess: (response) => {
+            console.log('Sourcemap uploaded successfully:', response);
+          },
+          onError: (error) => {
+            console.error('Sourcemap upload failed:', error);
+          },
+        };
+
+        chain
+          .plugin('SourcemapUploadPlugin')
+          .use(UploadSourceMapPlugin, [sourcemapConfig]);
       }
 
       chain.plugin('InlineCodePlugin').use(
