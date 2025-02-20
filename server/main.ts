@@ -19,6 +19,10 @@ async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
   // 配置静态资源
+  // 配置静态资源服务
+  // - 将 ../client 目录设置为静态资源目录
+  // - index: false 禁用默认返回 index.html
+  // - extensions 定义允许访问的静态资源文件扩展名
   app.useStaticAssets(join(__dirname, '../client'), {
     index: false,
     extensions: ['js', 'css', 'png', 'jpg', 'jpeg', 'gif', 'svg', 'ico'],

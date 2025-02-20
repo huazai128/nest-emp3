@@ -3,7 +3,6 @@ import { Request, Response, NextFunction } from 'express';
 import { fillParams, goWechatUrl, isWechat } from '@app/utils/util';
 import { ROUTE_DOMAIN_MAP } from '@app/constants/route-domain.constant';
 import { wechatConfig } from '@app/config';
-import { CacheService } from '@app/processors/redis/cache.service';
 import { createLogger } from '@app/utils/logger';
 import { WechatAuthService } from '@app/modules/wechatAuth/wechat-auth.service';
 import { WECHAT_SILENT_AUTH_ROUTES } from '@app/constants/route-domain.constant';
@@ -25,7 +24,6 @@ const logger = createLogger({
 @Injectable()
 export class WechatAuthMiddleware implements NestMiddleware {
   constructor(
-    private readonly cacheService: CacheService, // 缓存服务,用于存储授权信息
     private readonly wechatAuthService: WechatAuthService, // 微信授权服务
   ) {}
 
@@ -158,7 +156,7 @@ export class WechatAuthMiddleware implements NestMiddleware {
       res.cookie('userId', userInfo.userId);
       req.session.user = userInfo;
       await req.session.save(); // 确保 session 更新
-      logger.info(userInfo, '获取用户信息成功===');
+      logger.info('重定向前获取用户信息', req.session.user);
 
       // 处理重定向
       if (redirectUrl) {

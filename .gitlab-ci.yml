@@ -1,0 +1,110 @@
+steps:
+  - name: install-deps
+    image: node:20
+    volumes:
+      - name: yarn-cache
+        path: /usr/local/share/.cache/yarn
+    commands:
+      - yarn install --frozen-lockfile --cache-folder /usr/local/share/.cache/yarn
+      
+before_script:
+  - node -v
+  - ls -a
+  - yarn config set ignore-engines true
+  - yarn config set registry 
+  - yarn cache clean
+
+stages:
+  - install
+  - build
+  - deploy
+
+## 安装阶段
+install:
+  stage: install
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}-${CI_COMMIT_SHA}
+    paths:
+      - node_modules/
+      - .yarn-cache/
+  script:
+    - yarn install --frozen-lockfile --prefer-offline
+  only:
+    variables:
+      - $CI_COMMIT_BRANCH
+    changes:
+      - package.json
+      - yarn.lock
+
+# 发布 - 生产环境
+release_production:
+  stage: build
+  parallel: 4  # 增加并行数
+  tags:
+    - webfe
+  artifacts:
+    expire_in: 1 week
+    paths:
+      - dist/
+      - node_modules/
+      - package.json
+      - pm2.config.js
+      - deploy.sh
+  cache:
+    key: 
+      files:
+        - yarn.lock
+        - package.json
+    paths:
+      - node_modules/
+      - .yarn-cache/
+      - dist/
+  dependencies:
+    - install
+  script:
+    - echo "Deploying to production environment"
+    - if [ ! -d "node_modules/" ];then yarn install --prefer-offline; fi;
+    - yarn build --max-old-space-size=4096
+    - yarn build:prod --parallel
+  only:
+    - master
+
+deploy_test:
+  stage: deploy
+  environment:
+    name: test
+    url: https://test.example.com
+  script:
+    - echo "Deploying to test environment"
+    - if [ ! -d "node_modules/" ]; then yarn install --prefer-offline; fi;
+    - yarn build --max-old-space-size=4096
+    - yarn build:test --parallel
+    - yarn deploy:test || true  # 允许部署失败继续执行
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}-${CI_COMMIT_SHA}
+    paths:
+      - node_modules/
+      - .yarn-cache/
+      - dist/
+  when: manual
+
+deploy_release:
+  stage: deploy
+  environment:
+    name: production
+    url: https://www.example.com
+  script:
+    - echo "Deploying to release environment"
+    - if [ ! -d "node_modules/" ]; then yarn install --prefer-offline; fi;
+    - yarn build --max-old-space-size=4096
+    - yarn build:prod --parallel
+    - yarn deploy:prod || true  # 允许部署失败继续执行
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}-${CI_COMMIT_SHA}
+    paths:
+      - node_modules/
+      - .yarn-cache/
+      - dist/
+  when: manual
+  only:
+    - release
