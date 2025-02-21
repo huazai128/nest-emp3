@@ -1,6 +1,7 @@
-import './App.css';
 import React, { useEffect } from 'react';
 import { getWxConfig } from './utils/wxConfig';
+import './App.css';
+
 const App = () => {
   useEffect(() => {
     getWxConfig();
