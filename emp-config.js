@@ -146,9 +146,15 @@ export default defineConfig(() => {
       );
 
       // 修改 CSS 规则配置,内置的@empjs/plugin-postcss和@empjs/plugin-lightningcss 都没达到满意的效果
+      // 使用 style-loader 和 css-loader 处理 CSS 文件
+      // 使用 sass-loader 处理 SCSS 文件
+      // 使用 postcss-loader 处理 CSS 文件
+      // 使用 lightningcss-loader 处理 SCSS 文件
+      // 使用 postcss-loader 处理 CSS 文件
       chain.module
         .rule('css')
         .test(/\.(css|scss)$/)
+        .type('javascript/auto') // 添加type配置以解决experiments.css冲突
         .use('style-loader')
         .loader('style-loader')
         .end()
