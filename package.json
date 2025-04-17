@@ -24,7 +24,8 @@
     "stat": "emp build --analyze",
     "emp": "emp",
     "run-entry": "bash ./scripts/run-entry.sh",
-    "create-page": "bash ./scripts/create-page.sh"
+    "create-page": "bash ./scripts/create-page.sh",
+    "links": "node scripts/format-links.js"
   },
   "dependencies": {
     "@empjs/share": "^3.3.2",
@@ -37,6 +38,7 @@
     "@typegoose/typegoose": "^12.10.1",
     "archiver": "^7.0.1",
     "body-parser": "^1.20.3",
+    "cheerio": "^1.0.0",
     "class-validator": "^0.14.1",
     "classnames": "^2.5.1",
     "compression": "^1.7.5",
