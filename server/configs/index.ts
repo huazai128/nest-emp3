@@ -14,7 +14,7 @@ export const CONFIG = isProdEnv ? devConfig : devConfig;
 
 // 应用配置
 export const APP = {
-  PORT: 3003, // 应用端口号
+  PORT: 3002, // 应用端口号
   DEFAULT_CACHE_TTL: 60 * 60 * 24, // 默认缓存时间,单位秒
 };
 

@@ -80,7 +80,8 @@ const processDirectory = (dirPath) => {
       processDirectory(filePath);
     } else if (
       stat.isFile() &&
-      path.extname(filePath).toLowerCase() === '.html'
+      (path.extname(filePath).toLowerCase() === '.html' ||
+        path.extname(filePath).toLowerCase() === '.htm')
     ) {
       // 处理HTML文件
       processHtmlFile(filePath);

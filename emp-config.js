@@ -5,6 +5,8 @@ import { TypedCssModulesPlugin } from 'typed-css-modules-webpack-plugin';
 import { glob } from 'glob';
 import pluginReact from '@empjs/plugin-react';
 import { UploadSourceMapPlugin } from './build/sourcemap-upload-plugin';
+import autoprefixer from 'autoprefixer';
+import pxtorem from 'postcss-pxtorem';
 
 export default defineConfig(() => {
   const env = process.env.NODE_ENV;
@@ -147,10 +149,8 @@ export default defineConfig(() => {
 
       // 修改 CSS 规则配置,内置的@empjs/plugin-postcss和@empjs/plugin-lightningcss 都没达到满意的效果
       // 使用 style-loader 和 css-loader 处理 CSS 文件
+      // 使用 postcss-loader 处理 PostCSS 转换（包括 px to rem）
       // 使用 sass-loader 处理 SCSS 文件
-      // 使用 postcss-loader 处理 CSS 文件
-      // 使用 lightningcss-loader 处理 SCSS 文件
-      // 使用 postcss-loader 处理 CSS 文件
       chain.module
         .rule('css')
         .test(/\.(css|scss)$/)
@@ -164,6 +164,33 @@ export default defineConfig(() => {
           modules: {
             auto: true,
             localIdentName: '[local]_[hash:base64:5]',
+          },
+        })
+        .end()
+        .use('postcss-loader')
+        .loader('postcss-loader')
+        .options({
+          postcssOptions: {
+            plugins: [
+              autoprefixer,
+              pxtorem({
+                rootValue: 37.5, // 设计稿宽度/10，例如750px设计稿就是75，375px设计稿就是37.5
+                unitPrecision: 5, // rem精确到小数点后5位
+                propList: [
+                  '!font-size',
+                  '!font-weight',
+                  '!font-family',
+                  '!font-style',
+                  '!font-variant',
+                  '!font-variant-numeric',
+                  '!font-variant-caps',
+                ], // 明确指定需要转换的属性，排除 font-size
+                selectorBlackList: ['.ignore', '.hairlines'], // 忽略转换的class
+                replace: true, // 是否直接替换属性值，而不是添加备用属性
+                mediaQuery: false, // 是否在媒体查询中转换px
+                minPixelValue: 2, // 小于2px的样式不被转换
+              }),
+            ],
           },
         })
         .end()

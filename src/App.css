@@ -10,6 +10,7 @@ body {
 
 .content {
   display: flex;
+  width: 100px;
   min-height: 100vh;
   line-height: 1.1;
   text-align: center;
